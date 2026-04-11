@@ -1,4 +1,4 @@
-import { Sidebar } from './layout/Sidebar';
+import { Sidebar } from './layout';
 import { SummaryCard, AccountCard } from './components/DashboardCards';
 import { Plus } from 'lucide-react';
 import { TransactionsTable } from './components/TransactionsTable';
