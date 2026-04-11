@@ -15,16 +15,17 @@ export function Dashboard() {
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        <SummaryCard title="Total Balance" value="R$ 15.480,22" detail="From 6 Accounts" type="emerald" />
-        <SummaryCard title="Credit Card Bill" value="R$ 3.150,80" detail="Nubank Credit" type="rose" />
-        <SummaryCard title="Monthly Savings" value="R$ 2.229,42" detail="Positive Balance" type="indigo" />
+        <SummaryCard title="Balanço Total" value="R$ 15.480,22" detail="..." type="emerald" />
+        <SummaryCard title="Extrato do cartão de crédito" value="R$ 3.150,80" detail="Nubank credito" type="rose" />
+        <SummaryCard title="Poupança Mensal" value="R$ 2.229,42" detail="Saldo Positivo" type="indigo" />
       </div>
 
       <section className="mb-12">
         <h2 className="text-xl font-black text-slate-800 mb-6 tracking-tight">My Accounts</h2>
         <div className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide">
-          <AccountCard bank="Nubank Debito" type="Bank" value="R$ 15.480,22" label="CORRENTE" />
-          <AccountCard bank="BRADESCO Credit" type="Credit" value="R$ 3.150,80" label="CARTAO_CREDITO" />
+          <AccountCard bank="Nubank Debito" type="Bank" value="R$ 15.480,22" label="CONTA CORRENTE" />
+          <AccountCard bank="Nubank credito" type="Credit" value="R$ 3.150,80" label="CARTAO CREDITO" />
+          <AccountCard bank="Mercado Pago credito" type="Credit" value="R$ 250,20" label="CARTAO CREDITO" />
         </div>
       </section>
 

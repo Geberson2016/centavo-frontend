@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, ReceiptText, Wallet, Tags, Users, ChevronDown } from 'lucide-react';
+import logoImg from '../../assets/logo.svg';
 
 export function Sidebar() {
   const location = useLocation();
@@ -7,8 +8,7 @@ export function Sidebar() {
   return (
     <aside className="w-64 bg-[#1e2235] h-screen text-slate-400 flex flex-col fixed left-0 top-0">
       <div className="p-6 flex items-center gap-3">
-        <div className="w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center text-white font-bold text-lg">C</div>
-        <span className="text-xl font-bold text-white tracking-tight">Centavo</span>
+        <img src={logoImg} className="w-52" alt="Centavo Logo" /> 
       </div>
 
       <div className="px-4 mb-6">
