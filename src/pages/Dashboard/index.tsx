@@ -2,8 +2,18 @@ import { Plus } from 'lucide-react';
 import { SummaryCard } from '../../components/SummaryCard';
 import { AccountCard } from '../../components/AccountCard';
 import { TransactionsTable } from '../../components/TransactionsTable';
+import { useSummary } from '../../hook/useSummary';
 
 export function Dashboard() {
+  const { data: summary, isLoading, isError } = useSummary();
+
+  const formatCurrency = (value: number = 0) => {
+    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+  };
+
+  if (isLoading) return <div className="p-10 text-slate-500 font-bold">Carregando dados...</div>;
+  if (isError) return <div className="p-10 text-red-500 font-bold">Erro ao conectar com o servidor.</div>;
+
   return (
     <div className="max-w-6xl mx-auto">
       <header className="flex justify-between items-center mb-10">
@@ -15,9 +25,9 @@ export function Dashboard() {
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        <SummaryCard title="Balanço Total" value="R$ 15.480,22" detail="..." type="emerald" />
-        <SummaryCard title="Extrato do cartão de crédito" value="R$ 3.150,80" detail="Nubank credito" type="rose" />
-        <SummaryCard title="Poupança Mensal" value="R$ 2.229,42" detail="Saldo Positivo" type="indigo" />
+        <SummaryCard title="Balanço Total" value={formatCurrency(summary?.totalBalance)} detail="..." type="emerald" />
+        <SummaryCard title="Extrato do cartão de crédito" value={formatCurrency(summary?.creditCardBill)} detail="Nubank credito" type="rose" />
+        <SummaryCard title="Poupança Mensal" value={formatCurrency(summary?.monthlySavings)} detail="Saldo Positivo" type="indigo" />
       </div>
 
       <section className="mb-12">
