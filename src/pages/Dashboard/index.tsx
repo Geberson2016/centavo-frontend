@@ -18,10 +18,10 @@ export function Dashboard() {
     <div className="max-w-6xl mx-auto">
       <header className="flex justify-between items-center mb-10">
         <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight">Dashboard</h1>
-        <button className="bg-[#4f46e5] text-white px-5 py-2.5 rounded-xl flex items-center gap-2 font-bold text-sm shadow-indigo-200 shadow-lg hover:bg-indigo-700 transition-all active:scale-95">
+        <a href="/transactions" className="bg-[#4f46e5] text-white px-5 py-2.5 rounded-xl flex items-center gap-2 font-bold text-sm shadow-indigo-200 shadow-lg hover:bg-indigo-700 transition-all active:scale-95">
           <Plus size={18} strokeWidth={3} />
-          Add Transaction
-        </button>
+          Add transaction
+        </a>
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
