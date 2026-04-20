@@ -2,16 +2,18 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Sidebar } from './layout/Sidebar';
 import { Dashboard } from './pages/Dashboard';
 import { NotFound } from './pages/NotFound';
+import { Transactions } from './pages/Transactions';
 
 function App() {
   return (
     <BrowserRouter>
       <div className="flex font-sans text-slate-900">
         <Sidebar />
-        <main className="flex-1 ml-64 p-10 bg-slate-200">
+        <main className="flex-1 min-h-screen ml-64 p-10 bg-slate-200">
           <Routes>
             <Route path="/" element={<Navigate to="/dashboard" />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/transactions" element={<Transactions />} />
 
             <Route path="*" element={<NotFound />} />
           </Routes>

@@ -2,7 +2,7 @@ import { Plus } from 'lucide-react';
 import { SummaryCard } from '../../components/SummaryCard';
 import { AccountCard } from '../../components/AccountCard';
 import { TransactionsTable } from '../../components/TransactionsTable';
-import { useSummary } from '../../hook/useSummary';
+import { useSummary } from '../../hooks/useSummary';
 
 export function Dashboard() {
   const { data: summary, isLoading, isError } = useSummary();
