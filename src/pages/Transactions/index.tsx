@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { useAccounts } from "../../hooks/useAccounts";
 import { useCategories } from "../../hooks/useCategories";
 import { useCreateTransaction } from "../../hooks/useCreateTransaction";
+import { BankIcon } from "../../components/BankIcon";
 
 interface TransactionFormData {
   description: string;
@@ -24,6 +25,12 @@ export function Transactions() {
         type: "DESPESA",
       },
     });
+
+  const selectedAccountId = watch("accountId");
+
+  const selectedAccount = accounts?.find(
+    (acc) => acc.id === Number(selectedAccountId),
+  );
 
   const selectedType = watch("type");
   const filteredCategories =
@@ -107,24 +114,27 @@ export function Transactions() {
             </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-bold text-slate-700 mb-2">
-              Conta
-            </label>
-            <select
-              {...register("accountId", {
-                required: true,
-                valueAsNumber: true,
-              })}
-              className="w-full p-3 rounded-xl border border-slate-200 focus:outline-indigo-600 bg-white"
-            >
-              <option value="">Selecione uma conta</option>
-              {accounts?.map((acc) => (
-                <option key={acc.id} value={acc.id}>
-                  {acc.name}
-                </option>
-              ))}
-            </select>
+          <div className="flex justify-between items-end">
+            <BankIcon name={selectedAccount?.name} className="w-12 h-12" />
+            <div className="flex-1 ml-4">
+              <label className="block text-sm font-bold text-slate-700 mb-2">
+                Conta
+              </label>
+              <select
+                {...register("accountId", {
+                  required: true,
+                  valueAsNumber: true,
+                })}
+                className="w-full p-3 rounded-xl border border-slate-200 focus:outline-indigo-600 bg-white"
+              >
+                <option value="">Selecione uma conta</option>
+                {accounts?.map((acc) => (
+                  <option key={acc.id} value={acc.id}>
+                    {acc.name}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
           <div>
