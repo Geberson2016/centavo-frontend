@@ -1,8 +1,10 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { Sidebar } from './layout/Sidebar';
-import { Dashboard } from './pages/Dashboard';
-import { NotFound } from './pages/NotFound';
-import { Transactions } from './pages/Transactions';
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Sidebar } from "./layout/Sidebar";
+import { Dashboard } from "./pages/Dashboard";
+import { NotFound } from "./pages/NotFound";
+import { Transactions } from "./pages/Transactions";
+import { Accounts } from "./pages/Accounts";
+import { Categories } from "./pages/Categories";
 
 function App() {
   return (
@@ -14,6 +16,8 @@ function App() {
             <Route path="/" element={<Navigate to="/dashboard" />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/transactions" element={<Transactions />} />
+            <Route path="/accounts" element={<Accounts />} />
+            <Route path="/categories" element={<Categories />} />
 
             <Route path="*" element={<NotFound />} />
           </Routes>
