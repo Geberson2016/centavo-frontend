@@ -5,24 +5,25 @@ import { NotFound } from "./pages/NotFound";
 import { Transactions } from "./pages/Transactions";
 import { Accounts } from "./pages/Accounts";
 import { Categories } from "./pages/Categories";
+import { Register } from "./pages/Register";
+import { AppLayout } from "./layout/AppLayout";
 
 function App() {
   return (
     <BrowserRouter>
-      <div className="flex font-sans text-slate-900">
-        <Sidebar />
-        <main className="flex-1 min-h-screen ml-64 p-10 bg-slate-200">
-          <Routes>
-            <Route path="/" element={<Navigate to="/dashboard" />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/transactions" element={<Transactions />} />
-            <Route path="/accounts" element={<Accounts />} />
-            <Route path="/categories" element={<Categories />} />
+      <Routes>
+        <Route path="/register" element={<Register />} />
 
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </main>
-      </div>
+        <Route element={<AppLayout />}>
+          <Route path="/" element={<Navigate to="/dashboard" />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/transactions" element={<Transactions />} />
+          <Route path="/accounts" element={<Accounts />} />
+          <Route path="/categories" element={<Categories />} />
+        </Route>
+
+s        <Route path="*" element={<NotFound />} />
+      </Routes>
     </BrowserRouter>
   );
 }
