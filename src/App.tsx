@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { Sidebar } from "./layout/Sidebar";
 import { Dashboard } from "./pages/Dashboard";
 import { NotFound } from "./pages/NotFound";
 import { Transactions } from "./pages/Transactions";
@@ -7,12 +6,14 @@ import { Accounts } from "./pages/Accounts";
 import { Categories } from "./pages/Categories";
 import { Register } from "./pages/Register";
 import { AppLayout } from "./layout/AppLayout";
+import { Login } from "./pages/Login";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
 
         <Route element={<AppLayout />}>
           <Route path="/" element={<Navigate to="/dashboard" />} />
