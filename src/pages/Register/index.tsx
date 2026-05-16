@@ -7,9 +7,7 @@ export function Register() {
   const { mutate: createUser, isPending } = useCreateUser();
   const navigate = useNavigate();
 
-  const { register, handleSubmit, watch, formState: { errors } } = useForm();
-
-  const password = watch("password");
+  const { register, handleSubmit, formState: { errors } } = useForm();
 
   const onSubmit = (data: any) => {
     createUser(data, {

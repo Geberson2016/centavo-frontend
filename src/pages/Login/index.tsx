@@ -8,7 +8,7 @@ export function Login() {
   const { mutate: login, isPending } = useLogin();
   const navigate = useNavigate();
 
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, handleSubmit } = useForm();
 
   const onSubmit = (data: any) => {
     login(data, {
