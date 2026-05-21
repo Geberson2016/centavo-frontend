@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard,
   ReceiptText,
@@ -6,8 +6,8 @@ import {
   Tags,
   Users,
   ChevronDown,
-} from "lucide-react";
-import logoImg from "../../assets/logo.svg";
+} from 'lucide-react';
+import logoImg from '../../assets/logo.svg';
 
 export function Sidebar() {
   const location = useLocation();
@@ -37,31 +37,31 @@ export function Sidebar() {
           to="/dashboard"
           icon={LayoutDashboard}
           label="Dashboard"
-          active={location.pathname === "/dashboard"}
+          active={location.pathname === '/dashboard'}
         />
         <NavItem
           to="/transactions"
           icon={ReceiptText}
           label="Transactions"
-          active={location.pathname === "/transactions"}
+          active={location.pathname === '/transactions'}
         />
         <NavItem
           to="/accounts"
           icon={Wallet}
           label="Accounts"
-          active={location.pathname === "/accounts"}
+          active={location.pathname === '/accounts'}
         />
         <NavItem
           to="/categories"
           icon={Tags}
           label="Categories"
-          active={location.pathname === "/categories"}
+          active={location.pathname === '/categories'}
         />
         <NavItem
           to="/users"
           icon={Users}
           label="Users"
-          active={location.pathname === "/users"}
+          active={location.pathname === '/users'}
         />
       </nav>
 
@@ -83,8 +83,8 @@ function NavItem({ to, icon: Icon, label, active }: any) {
       to={to}
       className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
         active
-          ? "bg-[#2d324a] text-white shadow-lg font-bold"
-          : "hover:bg-slate-800 hover:text-slate-200"
+          ? 'bg-[#2d324a] text-white shadow-lg font-bold'
+          : 'hover:bg-slate-800 hover:text-slate-200'
       }`}
     >
       <Icon size={20} />
