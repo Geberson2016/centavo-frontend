@@ -1,9 +1,10 @@
-import { useForm } from "react-hook-form";
+import { useForm } from 'react-hook-form';
 import {
   useCreateCategory,
   type TransactionType,
   type BudgetType,
-} from "../../hooks/useCreateCategory";
+} from '../../hooks/useCreateCategory';
+import { useAuth } from '../../hooks/useAuth';
 
 interface CategoryFormData {
   name: string;
@@ -12,31 +13,32 @@ interface CategoryFormData {
   budgetType: BudgetType;
 }
 
-const TRANSACTION_TYPES: TransactionType[] = ["RECEITA", "DESPESA"];
-const BUDGET_TYPES: BudgetType[] = ["FIXO", "VARIAVEL"];
+const TRANSACTION_TYPES: TransactionType[] = ['RECEITA', 'DESPESA'];
+const BUDGET_TYPES: BudgetType[] = ['FIXO', 'VARIAVEL'];
 
 export function Categories() {
+  const { user } = useAuth();
   const { mutate: createCategory, isPending } = useCreateCategory();
 
   const { register, handleSubmit, resetField, watch } =
     useForm<CategoryFormData>({
       defaultValues: {
-        type: "DESPESA",
-        budgetType: "FIXO",
-        userId: 1,
+        type: 'DESPESA',
+        budgetType: 'FIXO',
+        userId: user?.id,
       },
     });
 
-  const selectedType = watch("type");
-  const selectedBudget = watch("budgetType");
+  const selectedType = watch('type');
+  const selectedBudget = watch('budgetType');
 
   const onSubmit = (data: CategoryFormData) => {
     createCategory(data, {
       onSuccess: () => {
-        resetField("name");
+        resetField('name');
       },
       onError: (err: any) => {
-        alert(err.response?.data?.message || "Erro ao criar categoria");
+        alert(err.response?.data?.message || 'Erro ao criar categoria');
       },
     });
   };
@@ -57,7 +59,7 @@ export function Categories() {
               Nome da Categoria
             </label>
             <input
-              {...register("name", { required: true })}
+              {...register('name', { required: true })}
               placeholder="Ex: Supermercado ou Salário"
               className="w-full p-3 rounded-xl border border-slate-200 focus:outline-indigo-600"
             />
@@ -75,13 +77,13 @@ export function Categories() {
                     key={type}
                     className={`flex-1 p-3 rounded-xl border-2 cursor-pointer transition-all text-center text-xs font-black ${
                       selectedType === type
-                        ? "border-indigo-600 bg-indigo-50 text-indigo-600"
-                        : "border-slate-100 text-slate-400 hover:border-slate-200"
+                        ? 'border-indigo-600 bg-indigo-50 text-indigo-600'
+                        : 'border-slate-100 text-slate-400 hover:border-slate-200'
                     }`}
                   >
                     <input
                       type="radio"
-                      {...register("type")}
+                      {...register('type')}
                       value={type}
                       className="hidden"
                     />
@@ -102,13 +104,13 @@ export function Categories() {
                     key={bType}
                     className={`flex-1 p-3 rounded-xl border-2 cursor-pointer transition-all text-center text-xs font-black ${
                       selectedBudget === bType
-                        ? "border-indigo-600 bg-indigo-50 text-indigo-600"
-                        : "border-slate-100 text-slate-400 hover:border-slate-200"
+                        ? 'border-indigo-600 bg-indigo-50 text-indigo-600'
+                        : 'border-slate-100 text-slate-400 hover:border-slate-200'
                     }`}
                   >
                     <input
                       type="radio"
-                      {...register("budgetType")}
+                      {...register('budgetType')}
                       value={bType}
                       className="hidden"
                     />
@@ -124,7 +126,7 @@ export function Categories() {
             type="submit"
             className="w-full bg-slate-900 text-white p-4 rounded-xl font-black hover:bg-slate-800 transition-all disabled:opacity-50 mt-4"
           >
-            {isPending ? "SALVANDO..." : "CADASTRAR CATEGORIA"}
+            {isPending ? 'SALVANDO...' : 'CADASTRAR CATEGORIA'}
           </button>
         </form>
       </div>

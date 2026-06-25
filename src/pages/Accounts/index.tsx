@@ -1,8 +1,9 @@
-import { useForm } from "react-hook-form";
+import { useForm } from 'react-hook-form';
 import {
   useCreateAccount,
   type AccountType,
-} from "../../hooks/useCreateAccount";
+} from '../../hooks/useCreateAccount';
+import { useAuth } from '../../hooks/useAuth';
 
 interface AccountFormData {
   name: string;
@@ -11,33 +12,35 @@ interface AccountFormData {
 }
 
 const ACCOUNT_TYPES: AccountType[] = [
-  "CORRENTE",
-  "POUPANCA",
-  "INVESTIMENTO",
-  "DINHEIRO",
-  "CARTAO_CREDITO",
+  'CORRENTE',
+  'POUPANCA',
+  'INVESTIMENTO',
+  'DINHEIRO',
+  'CARTAO_CREDITO',
 ];
 
 export function Accounts() {
+  const { user } = useAuth();
+
   const { mutate: createAccount, isPending } = useCreateAccount();
 
   const { register, handleSubmit, resetField, watch } =
     useForm<AccountFormData>({
       defaultValues: {
-        type: "CORRENTE",
-        userId: 1,
+        type: 'CORRENTE',
+        userId: user?.id,
       },
     });
 
-  const selectedType = watch("type");
+  const selectedType = watch('type');
 
   const onSubmit = (data: AccountFormData) => {
     createAccount(data, {
       onSuccess: () => {
-        resetField("name");
+        resetField('name');
       },
       onError: (err: any) => {
-        alert(err.response?.data?.message || "Erro ao criar conta");
+        alert(err.response?.data?.message || 'Erro ao criar conta');
       },
     });
   };
@@ -57,7 +60,7 @@ export function Accounts() {
               Nome da Conta
             </label>
             <input
-              {...register("name", { required: true })}
+              {...register('name', { required: true })}
               placeholder="Ex: Bradesco Corrente"
               className="w-full p-3 rounded-xl border border-slate-200 focus:outline-indigo-600"
             />
@@ -74,17 +77,17 @@ export function Accounts() {
                   key={type}
                   className={`p-3 rounded-xl border-2 cursor-pointer transition-all text-center text-xs font-black tracking-tighter ${
                     selectedType === type
-                      ? "border-indigo-600 bg-indigo-50 text-indigo-600"
-                      : "border-slate-100 text-slate-400 hover:border-slate-200"
+                      ? 'border-indigo-600 bg-indigo-50 text-indigo-600'
+                      : 'border-slate-100 text-slate-400 hover:border-slate-200'
                   }`}
                 >
                   <input
                     type="radio"
-                    {...register("type")}
+                    {...register('type')}
                     value={type}
                     className="hidden"
                   />
-                  {type.replace("_", " ")}
+                  {type.replace('_', ' ')}
                 </label>
               ))}
             </div>
@@ -95,7 +98,7 @@ export function Accounts() {
             type="submit"
             className="w-full bg-slate-900 text-white p-4 rounded-xl font-black hover:bg-slate-800 transition-all disabled:opacity-50 mt-4"
           >
-            {isPending ? "SALVANDO..." : "CADASTRAR CONTA"}
+            {isPending ? 'SALVANDO...' : 'CADASTRAR CONTA'}
           </button>
         </form>
       </div>

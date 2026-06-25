@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import logoImg from '../../assets/logo.svg';
 import { useQueryClient } from '@tanstack/react-query';
+import { useAuth } from '../../hooks/useAuth';
 
 export function Sidebar() {
   const location = useLocation();
@@ -23,6 +24,8 @@ export function Sidebar() {
     navigate('/login');
   };
 
+  const { user } = useAuth();
+
   return (
     <aside className="w-64 bg-slate-900 h-screen text-slate-400 flex flex-col fixed left-0 top-0">
       <div className="p-6 flex items-center gap-3">
@@ -32,14 +35,8 @@ export function Sidebar() {
       <div className="px-4 mb-6">
         <div className="bg-[#2d324a] p-3 rounded-xl border border-slate-700 flex items-center justify-between cursor-pointer">
           <div className="flex flex-col">
-            <span className="text-white text-[11px] font-black uppercase">
-              Janeide
-            </span>
-            <span className="text-[10px] text-slate-500 font-bold">
-              User ID: 9
-            </span>
+            <span className="text-white text-sm font-bold">{user?.name}</span>
           </div>
-          <ChevronDown size={14} className="text-slate-500" />
         </div>
       </div>
 
