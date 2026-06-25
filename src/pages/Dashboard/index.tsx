@@ -1,16 +1,16 @@
-import { Plus } from "lucide-react";
-import { SummaryCard } from "../../components/SummaryCard";
-import { AccountCard } from "../../components/AccountCard";
-import { TransactionsTable } from "../../components/TransactionsTable";
-import { useSummary } from "../../hooks/useSummary";
+import { Plus } from 'lucide-react';
+import { SummaryCard } from '../../components/SummaryCard';
+import { AccountCard } from '../../components/AccountCard';
+import { TransactionsTable } from '../../components/TransactionsTable';
+import { useSummary } from '../../hooks/useSummary';
 
 export function Dashboard() {
   const { data: summary, isLoading, isError } = useSummary();
 
   const formatCurrency = (value: number = 0) => {
-    return new Intl.NumberFormat("pt-BR", {
-      style: "currency",
-      currency: "BRL",
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
     }).format(value);
   };
 
