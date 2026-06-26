@@ -1,8 +1,10 @@
-import { Plus } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 import { SummaryCard } from '../../components/SummaryCard';
 import { AccountCard } from '../../components/AccountCard';
 import { TransactionsTable } from '../../components/TransactionsTable';
 import { useSummary } from '../../hooks/useSummary';
+import { useEffect, useRef, useState } from 'react';
+import { useAccountSummary } from '../../hooks/useAccountSummary';
 
 export function Dashboard() {
   const { data: summary, isLoading, isError } = useSummary();
@@ -13,6 +15,31 @@ export function Dashboard() {
       currency: 'BRL',
     }).format(value);
   };
+
+  const { data: accounts } = useAccountSummary();
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scroll = (direction: 'left' | 'right') => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({
+        left: direction === 'right' ? 280 : -280,
+        behavior: 'smooth',
+      });
+    }
+  };
+
+  const [showButtons, setShowButtons] = useState(false);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    const check = () => setShowButtons(el.scrollWidth > el.clientWidth);
+    check();
+
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, [accounts]);
 
   if (isLoading)
     return (
@@ -78,25 +105,39 @@ export function Dashboard() {
         <h2 className="text-xl font-black text-slate-800 mb-6 tracking-tight">
           My Accounts
         </h2>
-        <div className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide">
-          <AccountCard
-            bank="Nubank Debito"
-            type="Bank"
-            value="R$ 15.480,22"
-            label="CONTA CORRENTE"
-          />
-          <AccountCard
-            bank="Nubank credito"
-            type="Credit"
-            value="R$ 3.150,80"
-            label="CARTAO CREDITO"
-          />
-          <AccountCard
-            bank="Mercado Pago credito"
-            type="Credit"
-            value="R$ 250,20"
-            label="CARTAO CREDITO"
-          />
+        <div className="relative">
+          {showButtons && (
+            <button
+              onClick={() => scroll('left')}
+              className="absolute -left-4 top-1/2 -translate-y-1/2 z-10 bg-white border border-slate-200 rounded-full p-1.5 shadow-sm hover:bg-slate-50 transition-all"
+            >
+              <ChevronLeft size={18} className="text-slate-600" />
+            </button>
+          )}
+
+          <div
+            ref={scrollRef}
+            className="flex gap-4 overflow-x-auto pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden scroll-smooth"
+          >
+            {accounts?.map((account) => (
+              <AccountCard
+                key={account.accountId}
+                accountName={account.accountName}
+                accountType={account.accountType}
+                totalRevenue={account.totalRevenue}
+                totalExpense={account.totalExpense}
+              />
+            ))}
+          </div>
+
+          {showButtons && (
+            <button
+              onClick={() => scroll('right')}
+              className="absolute -right-4 top-1/2 -translate-y-1/2 z-10 bg-white border border-slate-200 rounded-full p-1.5 shadow-sm hover:bg-slate-50 transition-all"
+            >
+              <ChevronRight size={18} className="text-slate-600" />
+            </button>
+          )}
         </div>
       </section>
 
