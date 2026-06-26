@@ -43,22 +43,34 @@ export function Dashboard() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
         <SummaryCard
-          title="Balanço Total"
+          title="Saldo Total"
           value={formatCurrency(summary?.totalBalance)}
-          detail="Total acumulado"
-          type="emerald"
+          detail="Histórico acumulado"
+          type="wallet"
         />
         <SummaryCard
-          title="Extrato do cartão de crédito"
+          title="Fatura do Mês"
           value={formatCurrency(summary?.creditCardBill)}
-          detail="Nubank credito"
-          type="rose"
+          detail="Cartão de crédito"
+          type="credit"
         />
         <SummaryCard
-          title="Poupança Mensal"
+          title="Saldo do Mês"
           value={formatCurrency(summary?.monthlySavings)}
-          detail="Saldo Positivo"
-          type="indigo"
+          detail="Receitas - Despesas"
+          type="piggyBank"
+        />
+        <SummaryCard
+          title="Despesas"
+          value={formatCurrency(summary?.totalExpense)}
+          detail="Mês atual"
+          type="expense"
+        />
+        <SummaryCard
+          title="Receita"
+          value={formatCurrency(summary?.totalRevenue)}
+          detail="Mês atual"
+          type="revenue"
         />
       </div>
 

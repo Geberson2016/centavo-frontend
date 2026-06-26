@@ -1,31 +1,49 @@
-import { Wallet, CreditCard, PiggyBank } from "lucide-react";
+import {
+  Wallet,
+  CreditCard,
+  PiggyBank,
+  TrendingDown,
+  TrendingUp,
+} from 'lucide-react';
 
 interface SummaryCardProps {
   title: string;
   value: string;
   detail: string;
-  type: "emerald" | "rose" | "indigo";
+  type: 'wallet' | 'credit' | 'piggyBank' | 'expense' | 'revenue';
 }
 
 export function SummaryCard({ title, value, detail, type }: SummaryCardProps) {
   const colors = {
-    emerald: {
-      text: "text-emerald-500",
-      bg: "bg-emerald-50",
+    wallet: {
+      text: 'text-emerald-500',
+      bg: 'bg-emerald-50',
       icon: Wallet,
-      arrow: "↑",
+      arrow: '↑',
     },
-    rose: {
-      text: "text-rose-500",
-      bg: "bg-rose-50",
+    credit: {
+      text: 'text-rose-500',
+      bg: 'bg-rose-50',
       icon: CreditCard,
-      arrow: "↓",
+      arrow: '↓',
     },
-    indigo: {
-      text: "text-[#4f46e5]",
-      bg: "bg-indigo-50",
+    piggyBank: {
+      text: 'text-[#4f46e5]',
+      bg: 'bg-indigo-50',
       icon: PiggyBank,
-      arrow: "",
+      arrow: '',
+    },
+    expense: {
+      text: 'text-rose-500',
+      bg: 'bg-rose-50',
+      icon: TrendingDown,
+      arrow: '↓',
+    },
+    revenue: {
+      text: 'text-emerald-500',
+      bg: 'bg-emerald-50',
+      icon: TrendingUp,
+      arrow: '',
     },
   };
 
@@ -33,7 +51,7 @@ export function SummaryCard({ title, value, detail, type }: SummaryCardProps) {
   const Icon = config.icon;
 
   return (
-    <div className="bg-white p-6 rounded-[24px] shadow-sm border border-slate-100 flex flex-col justify-between h-40 ">
+    <div className="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 flex flex-col justify-between h-36">
       <div className="flex items-center justify-between">
         <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest">
           {title}

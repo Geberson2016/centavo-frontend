@@ -5,6 +5,8 @@ interface DashboardSummary {
   totalBalance: number;
   creditCardBill: number;
   monthlySavings: number;
+  totalExpense: number;
+  totalRevenue: number;
 }
 
 export function useSummary() {
