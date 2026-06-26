@@ -7,6 +7,8 @@ interface DashboardSummary {
   monthlySavings: number;
   totalExpense: number;
   totalRevenue: number;
+  scheduledRevenue: number;
+  scheduledExpense: number;
 }
 
 export function useSummary() {

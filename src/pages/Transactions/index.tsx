@@ -1,8 +1,10 @@
-import { useForm } from "react-hook-form";
-import { useAccounts } from "../../hooks/useAccounts";
-import { useCategories } from "../../hooks/useCategories";
-import { useCreateTransaction } from "../../hooks/useCreateTransaction";
-import { BankIcon } from "../../components/BankIcon";
+import { useForm } from 'react-hook-form';
+import { useAccounts } from '../../hooks/useAccounts';
+import { useCategories } from '../../hooks/useCategories';
+import { useCreateTransaction } from '../../hooks/useCreateTransaction';
+import { BankIcon } from '../../components/BankIcon';
+import { Link } from 'react-router-dom';
+import { Plus } from 'lucide-react';
 
 interface TransactionFormData {
   description: string;
@@ -10,7 +12,7 @@ interface TransactionFormData {
   date: string;
   accountId: number;
   categoryId: number;
-  type: "RECEITA" | "DESPESA";
+  type: 'RECEITA' | 'DESPESA';
 }
 
 export function Transactions() {
@@ -21,28 +23,30 @@ export function Transactions() {
   const { register, handleSubmit, watch, resetField } =
     useForm<TransactionFormData>({
       defaultValues: {
-        date: new Date().toISOString().split("T")[0],
-        type: "DESPESA",
+        date: new Date().toISOString().split('T')[0],
+        type: 'DESPESA',
       },
     });
 
-  const selectedAccountId = watch("accountId");
-
+  const selectedAccountId = watch('accountId');
   const selectedAccount = accounts?.find(
-    (acc) => acc.id === Number(selectedAccountId),
+    (acc) => acc.id === Number(selectedAccountId)
   );
 
-  const selectedType = watch("type");
+  const selectedType = watch('type');
   const filteredCategories =
     categories?.filter((cat) => cat.type === selectedType) || [];
+
+  const hasNoAccounts = accounts !== undefined && accounts.length === 0;
+  const hasNoCategories = filteredCategories.length === 0;
 
   const onSubmit = (data: TransactionFormData) => {
     createTransaction(data, {
       onSuccess: () => {
-        resetField("description");
+        resetField('description');
       },
       onError: (err: any) => {
-        alert(err.response?.data?.message || "Erro ao criar transação");
+        alert(err.response?.data?.message || 'Erro ao criar transação');
       },
     });
   };
@@ -61,14 +65,14 @@ export function Transactions() {
               O que aconteceu?
             </label>
             <div className="flex gap-4">
-              {["DESPESA", "RECEITA"].map((t) => (
+              {['DESPESA', 'RECEITA'].map((t) => (
                 <label
                   key={t}
-                  className={`flex-1 p-3 rounded-xl border-2 cursor-pointer transition-all text-center font-bold ${selectedType === t ? "border-indigo-600 bg-indigo-50 text-indigo-600" : "border-slate-100 text-slate-400"}`}
+                  className={`flex-1 p-3 rounded-xl border-2 cursor-pointer transition-all text-center font-bold ${selectedType === t ? 'border-indigo-600 bg-indigo-50 text-indigo-600' : 'border-slate-100 text-slate-400'}`}
                 >
                   <input
                     type="radio"
-                    {...register("type")}
+                    {...register('type')}
                     value={t}
                     className="hidden"
                   />
@@ -83,7 +87,7 @@ export function Transactions() {
               Descrição
             </label>
             <input
-              {...register("description", { required: true })}
+              {...register('description', { required: true })}
               placeholder="Ex: Cemig Energia"
               className="w-full p-3 rounded-xl border border-slate-200 focus:outline-indigo-600"
             />
@@ -97,37 +101,53 @@ export function Transactions() {
               <input
                 type="number"
                 step="0.01"
-                {...register("value", { required: true, valueAsNumber: true })}
+                {...register('value', { required: true, valueAsNumber: true })}
                 className="w-full p-3 rounded-xl border border-slate-200 focus:outline-indigo-600"
               />
             </div>
-
             <div>
               <label className="block text-sm font-bold text-slate-700 mb-2">
                 Data
               </label>
               <input
                 type="date"
-                {...register("date", { required: true })}
+                {...register('date', { required: true })}
                 className="w-full p-3 rounded-xl border border-slate-200 focus:outline-indigo-600"
               />
             </div>
           </div>
 
-          <div className="flex justify-between items-end">
-            <BankIcon name={selectedAccount?.name} className="w-12 h-12" />
-            <div className="flex-1 ml-4">
-              <label className="block text-sm font-bold text-slate-700 mb-2">
+          {/* Conta */}
+          <div>
+            <div className="flex justify-between items-center mb-2">
+              <label className="block text-sm font-bold text-slate-700">
                 Conta
               </label>
+              {hasNoAccounts && (
+                <Link
+                  to="/accounts"
+                  className="flex items-center gap-1 text-xs font-bold text-indigo-600 hover:underline"
+                >
+                  <Plus size={12} />
+                  Criar conta
+                </Link>
+              )}
+            </div>
+            <div className="flex justify-between items-center gap-4">
+              <BankIcon name={selectedAccount?.name} className="w-12 h-12" />
               <select
-                {...register("accountId", {
+                {...register('accountId', {
                   required: true,
                   valueAsNumber: true,
                 })}
-                className="w-full p-3 rounded-xl border border-slate-200 focus:outline-indigo-600 bg-white"
+                disabled={hasNoAccounts}
+                className="flex-1 p-3 rounded-xl border border-slate-200 focus:outline-indigo-600 bg-white disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <option value="">Selecione uma conta</option>
+                <option value="">
+                  {hasNoAccounts
+                    ? 'Nenhuma conta cadastrada'
+                    : 'Selecione uma conta'}
+                </option>
                 {accounts?.map((acc) => (
                   <option key={acc.id} value={acc.id}>
                     {acc.name}
@@ -137,18 +157,35 @@ export function Transactions() {
             </div>
           </div>
 
+          {/* Categoria */}
           <div>
-            <label className="block text-sm font-bold text-slate-700 mb-2">
-              Categoria
-            </label>
+            <div className="flex justify-between items-center mb-2">
+              <label className="block text-sm font-bold text-slate-700">
+                Categoria
+              </label>
+              {hasNoCategories && (
+                <Link
+                  to="/categories"
+                  className="flex items-center gap-1 text-xs font-bold text-indigo-600 hover:underline"
+                >
+                  <Plus size={12} />
+                  Criar categoria
+                </Link>
+              )}
+            </div>
             <select
-              {...register("categoryId", {
+              {...register('categoryId', {
                 required: true,
                 valueAsNumber: true,
               })}
-              className="w-full p-3 rounded-xl border border-slate-200 focus:outline-indigo-600 bg-white"
+              disabled={hasNoCategories}
+              className="w-full p-3 rounded-xl border border-slate-200 focus:outline-indigo-600 bg-white disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <option value="">Selecione uma categoria</option>
+              <option value="">
+                {hasNoCategories
+                  ? `Nenhuma categoria de ${selectedType === 'DESPESA' ? 'despesa' : 'receita'} cadastrada`
+                  : 'Selecione uma categoria'}
+              </option>
               {filteredCategories.map((cat) => (
                 <option key={cat.id} value={cat.id}>
                   {cat.name}
@@ -158,11 +195,11 @@ export function Transactions() {
           </div>
 
           <button
-            disabled={isPending}
+            disabled={isPending || hasNoAccounts || hasNoCategories}
             type="submit"
             className="w-full bg-slate-900 text-white p-4 rounded-xl font-black hover:bg-slate-800 transition-all disabled:opacity-50 mt-4"
           >
-            {isPending ? "SALVANDO..." : "CONFIRMAR TRANSAÇÃO"}
+            {isPending ? 'SALVANDO...' : 'CONFIRMAR TRANSAÇÃO'}
           </button>
         </form>
       </div>

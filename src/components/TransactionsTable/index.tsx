@@ -12,15 +12,27 @@ export function TransactionsTable({
   isLoading,
   isError,
 }: TransactionsTableProps) {
-  const formatDate = (dateStr: string) =>
-    new Date(dateStr).toLocaleDateString('pt-BR', {
+  const formatDate = (dateStr: string) => {
+    const [year, month, day] = dateStr.split('-').map(Number);
+    return new Date(year, month - 1, day).toLocaleDateString('pt-BR', {
       day: '2-digit',
       month: 'short',
       year: 'numeric',
     });
+  };
 
   const formatCurrency = (value: number) =>
     value.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+
+  const isFuture = (dateStr: string) => {
+    const [year, month, day] = dateStr.split('-').map(Number);
+    const date = new Date(year, month - 1, day);
+    const today = new Date();
+    return (
+      date.getMonth() > today.getMonth() ||
+      date.getFullYear() > today.getFullYear()
+    );
+  };
 
   return (
     <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
@@ -102,7 +114,9 @@ export function TransactionsTable({
                       {t.categoryName}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-xs font-bold text-slate-400">
+                  <td
+                    className={`px-6 py-4 text-xs font-bold ${isFuture(t.date) ? 'text-rose-400' : 'text-slate-400'}`}
+                  >
                     {formatDate(t.date)}
                   </td>
                   <td

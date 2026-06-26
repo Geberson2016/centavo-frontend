@@ -109,6 +109,18 @@ export function Dashboard() {
           detail="Mês atual"
           type="revenue"
         />
+        <SummaryCard
+          title="Receita Prevista"
+          value={formatCurrency(summary?.scheduledRevenue)}
+          detail="Agendamentos futuros"
+          type="revenue"
+        />
+        <SummaryCard
+          title="Despesa Prevista"
+          value={formatCurrency(summary?.scheduledExpense)}
+          detail="Agendamentos futuros"
+          type="expense"
+        />
       </div>
 
       <section className="mb-12">
