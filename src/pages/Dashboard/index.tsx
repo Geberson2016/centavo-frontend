@@ -39,6 +39,7 @@ export function Dashboard() {
   };
 
   const [showButtons, setShowButtons] = useState(false);
+  const [showAllCards, setShowAllCards] = useState(false);
 
   useEffect(() => {
     const el = scrollRef.current;
@@ -78,49 +79,63 @@ export function Dashboard() {
         </a>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        <SummaryCard
-          title="Saldo Total"
-          value={formatCurrency(summary?.totalBalance)}
-          detail="Histórico acumulado"
-          type="wallet"
-        />
-        <SummaryCard
-          title="Fatura do Mês"
-          value={formatCurrency(summary?.creditCardBill)}
-          detail="Cartão de crédito"
-          type="credit"
-        />
-        <SummaryCard
-          title="Saldo do Mês"
-          value={formatCurrency(summary?.monthlySavings)}
-          detail="Receitas - Despesas"
-          type="piggyBank"
-        />
-        <SummaryCard
-          title="Despesas"
-          value={formatCurrency(summary?.totalExpense)}
-          detail="Mês atual"
-          type="expense"
-        />
-        <SummaryCard
-          title="Receita"
-          value={formatCurrency(summary?.totalRevenue)}
-          detail="Mês atual"
-          type="revenue"
-        />
-        <SummaryCard
-          title="Receita Prevista"
-          value={formatCurrency(summary?.scheduledRevenue)}
-          detail="Agendamentos futuros"
-          type="revenue"
-        />
-        <SummaryCard
-          title="Despesa Prevista"
-          value={formatCurrency(summary?.scheduledExpense)}
-          detail="Agendamentos futuros"
-          type="expense"
-        />
+      <div className="mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <SummaryCard
+            title="Saldo Total"
+            value={formatCurrency(summary?.totalBalance)}
+            detail="Histórico acumulado"
+            type="wallet"
+          />
+          <SummaryCard
+            title="Fatura do Mês"
+            value={formatCurrency(summary?.creditCardBill)}
+            detail="Cartão de crédito"
+            type="credit"
+          />
+          <SummaryCard
+            title="Saldo do Mês"
+            value={formatCurrency(summary?.monthlySavings)}
+            detail="Receitas - Despesas"
+            type="piggyBank"
+          />
+
+          {showAllCards && (
+            <>
+              <SummaryCard
+                title="Despesas"
+                value={formatCurrency(summary?.totalExpense)}
+                detail="Mês atual"
+                type="expense"
+              />
+              <SummaryCard
+                title="Receita"
+                value={formatCurrency(summary?.totalRevenue)}
+                detail="Mês atual"
+                type="revenue"
+              />
+              <SummaryCard
+                title="Receita Prevista"
+                value={formatCurrency(summary?.scheduledRevenue)}
+                detail="Agendamentos futuros"
+                type="revenue"
+              />
+              <SummaryCard
+                title="Despesa Prevista"
+                value={formatCurrency(summary?.scheduledExpense)}
+                detail="Agendamentos futuros"
+                type="expense"
+              />
+            </>
+          )}
+        </div>
+
+        <button
+          onClick={() => setShowAllCards(!showAllCards)}
+          className="mt-4 text-xs font-bold text-indigo-600 hover:underline"
+        >
+          {showAllCards ? 'Ver menos' : 'Ver todos os indicadores'}
+        </button>
       </div>
 
       <section className="mb-12">
