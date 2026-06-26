@@ -5,9 +5,19 @@ import { TransactionsTable } from '../../components/TransactionsTable';
 import { useSummary } from '../../hooks/useSummary';
 import { useEffect, useRef, useState } from 'react';
 import { useAccountSummary } from '../../hooks/useAccountSummary';
+import { useRecentTransactions } from '../../hooks/useRecentTransactions';
 
 export function Dashboard() {
-  const { data: summary, isLoading, isError } = useSummary();
+  const {
+    data: summary,
+    isLoading: isSummaryLoading,
+    isError: isSummaryError,
+  } = useSummary();
+  const {
+    data: transactions = [],
+    isLoading: isTransactionsLoading,
+    isError: isTransactionsError,
+  } = useRecentTransactions();
 
   const formatCurrency = (value: number = 0) => {
     return new Intl.NumberFormat('pt-BR', {
@@ -41,11 +51,11 @@ export function Dashboard() {
     return () => window.removeEventListener('resize', check);
   }, [accounts]);
 
-  if (isLoading)
+  if (isTransactionsLoading)
     return (
       <div className="p-10 text-slate-500 font-bold">Carregando dados...</div>
     );
-  if (isError)
+  if (isTransactionsError)
     return (
       <div className="p-10 text-red-500 font-bold">
         Erro ao conectar com o servidor.
@@ -142,7 +152,11 @@ export function Dashboard() {
       </section>
 
       <section>
-        <TransactionsTable />
+        <TransactionsTable
+          transactions={transactions}
+          isLoading={isTransactionsLoading}
+          isError={isTransactionsError}
+        />
       </section>
     </div>
   );
