@@ -10,17 +10,26 @@ Plano incremental para sair do estado atual e chegar na arquitetura-alvo (**Reac
 
 ---
 
+## 📌 Status atual (atualizado em 2026-09-02)
+
+- **Concluídos e commitados no backend:** C1, C2, C3, C4, C5, C6 (Fases 0, 1, 2, 3 completas). Árvore de git limpa.
+- **Próximo passo:** **C7 — migração PT→EN dos enums** (par coordenado ⚠️ com o C8 no frontend).
+- **Lembrete crítico do C7:** a migração Flyway precisa **dropar/recriar as check constraints** dos enums antes do `UPDATE` (o banco atual foi criado por `ddl-auto=update`, que gerou checks tipo `type IN ('RECEITA','DESPESA')`). Detalhes na própria seção do C7.
+- Backend rodando: precisa de Postgres em `localhost:5432` (db `centavo`, user/pass `admin`) e da env `JWT_SECRET` (tem default de dev). Boot verificado com `./mvnw spring-boot:run`.
+
+---
+
 ## Fase 0 — Higiene de configuração e limpezas (backend, baixo risco, sem dependências)
 
-### [ ] C1 · [backend] Externalizar segredos
+### [x] C1 · [backend] Externalizar segredos
 Tirar do `application.properties` o segredo do JWT (`api.security.token.secret=chave-super-secreta-12345`) e as credenciais do datasource (`admin/admin`); ler de variáveis de ambiente (`${JWT_SECRET}`, `${DB_USER}`, `${DB_PASSWORD}`). Adicionar `application-example.properties` versionado com placeholders e garantir `.env`/valores reais no `.gitignore`.
 - **Commit:** `chore(config): externaliza segredo do JWT e credenciais do banco via env`
 
-### [ ] C2 · [backend] Remover starter de persistência duplicado
+### [x] C2 · [backend] Remover starter de persistência duplicado
 Remover do `pom.xml` o `spring-boot-starter-data-jdbc` (mantendo apenas `data-jpa`, que é o em uso).
 - **Commit:** `chore(deps): remove spring-boot-starter-data-jdbc não utilizado`
 
-### [ ] C3 · [backend] Centralizar CORS
+### [x] C3 · [backend] Centralizar CORS
 Remover os `@CrossOrigin` por controller (ex.: `TransactionController`) e deixar o CORS só no `SecurityConfig`, com as origens vindo de configuração (`${CORS_ALLOWED_ORIGINS}`) em vez de literal.
 - **Commit:** `refactor(security): centraliza CORS no SecurityConfig e remove @CrossOrigin`
 
@@ -28,7 +37,7 @@ Remover os `@CrossOrigin` por controller (ex.: `TransactionController`) e deixar
 
 ## Fase 1 — Banco versionado
 
-### [ ] C4 · [backend] Adotar Flyway
+### [x] C4 · [backend] Adotar Flyway
 Adicionar a dependência do Flyway, criar a migração baseline (`V1__baseline.sql`) refletindo as entidades **atuais** (users com email/phone/password, accounts, categories, transactions), trocar `spring.jpa.hibernate.ddl-auto=update` por `validate` e aposentar o `schema.sql` divergente.
 - **Commit:** `chore(db): adiciona Flyway com baseline do schema e ddl-auto=validate`
 - **Depende de:** —
@@ -37,7 +46,7 @@ Adicionar a dependência do Flyway, criar a migração baseline (`V1__baseline.s
 
 ## Fase 2 — Modelo de erro
 
-### [ ] C5 · [backend] Exceptions tipadas + handler global
+### [x] C5 · [backend] Exceptions tipadas + handler global
 Criar exceptions de domínio com **código estável** (ex.: `NotFoundException(code)`, `ConflictException(code)`), um `@RestControllerAdvice` que devolve **RFC 7807 `application/problem+json`** (`{ code, status, detail? }`) e substituir todos os `throw new RuntimeException("...")` dos services pelos tipos novos, usando os códigos da tabela de `AGENTS.md §4` (`ACCOUNT_NOT_FOUND`, `CATEGORY_NOT_FOUND`, `TRANSACTION_NOT_FOUND`, `EMAIL_ALREADY_EXISTS`, `TRANSACTION_CATEGORY_TYPE_MISMATCH`).
 - **Commit:** `feat(error): adiciona exceptions de domínio tipadas e handler global (RFC 7807)`
 - **Depende de:** —
@@ -47,7 +56,7 @@ Criar exceptions de domínio com **código estável** (ex.: `NotFoundException(c
 
 ## Fase 3 — Validação de entrada
 
-### [ ] C6 · [backend] Bean validation nos DTOs de request
+### [x] C6 · [backend] Bean validation nos DTOs de request
 Anotar os `record`s `*Request` com `jakarta.validation` (`@NotBlank`, `@Email`, `@Positive`, `@NotNull`, etc.) e colocar `@Valid` nos parâmetros dos controllers. O handler da Fase 2 traduz `MethodArgumentNotValidException` para o formato RFC 7807 com código `VALIDATION_ERROR`.
 - **Commit:** `feat(validation): valida DTOs de request com jakarta validation`
 - **Depende de:** C5
@@ -60,6 +69,7 @@ Anotar os `record`s `*Request` com `jakarta.validation` (`@NotBlank`, `@Email`, 
 Renomear os valores dos enums conforme `AGENTS.md §4` (`RECEITA→INCOME`, `DESPESA→EXPENSE`, `CORRENTE→CHECKING`, `POUPANCA→SAVINGS`, `INVESTIMENTO→INVESTMENT`, `DINHEIRO→CASH`, `CARTAO_CREDITO→CREDIT_CARD`, `FIXO→FIXED`, `VARIAVEL→VARIABLE`) e criar migração Flyway `V2__rename_domain_enums_to_english.sql` com `UPDATE` sobre `transactions.type`, `accounts.type`, `categories.type`, `categories.budget_type`.
 - **Commit:** `refactor(domain): migra enums de domínio para inglês (INCOME/EXPENSE, CHECKING…)`
 - **Depende de:** C4
+- ⚠️ **Atenção (constatado no C4):** o banco atual foi criado pelo `ddl-auto=update`, então o Hibernate criou **check constraints** nos enums (ex.: `type IN ('RECEITA','DESPESA')`). A migração Flyway do C7 precisa **dropar essas check constraints antes do `UPDATE`** dos valores e **recriá-las** com os valores em inglês (ou removê-las de vez), senão o `UPDATE` falha. Isso vale para `accounts.type`, `categories.type`, `categories.budget_type` e `transactions.type`.
 
 ### [ ] C8 · [frontend] Alinhar tipos ao contrato em inglês
 Trocar os union types `'RECEITA' | 'DESPESA'` por `'INCOME' | 'EXPENSE'` (ex.: `hooks/useCreateTransaction.ts`) e qualquer valor de conta correspondente. Ajustar labels exibidos (que viram chaves de i18n na Fase 6).
