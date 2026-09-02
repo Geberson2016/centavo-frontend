@@ -73,13 +73,7 @@ export function Sidebar() {
         />
       </nav>
 
-      <div className="p-4 border-t border-slate-800 flex items-center gap-3">
-        <div className="w-8 h-8 bg-emerald-500/20 rounded-full flex items-center justify-center">
-          <div className="w-4 h-4 bg-emerald-500 rounded-full"></div>
-        </div>
-        <span className="flex-1 text-white font-bold text-sm tracking-tight">
-          Centavo
-        </span>
+      <div className="p-4 border-t border-slate-800 flex items-center gap-3 justify-end">
         <button
           onClick={handleLogout}
           className="text-slate-400 hover:text-white transition-colors text-xs font-bold uppercase tracking-wider"

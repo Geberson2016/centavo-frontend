@@ -1,4 +1,5 @@
 import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { SummaryCard } from '../../components/SummaryCard';
 import { AccountCard } from '../../components/AccountCard';
 import { TransactionsTable } from '../../components/TransactionsTable';
@@ -156,15 +157,32 @@ export function Dashboard() {
             ref={scrollRef}
             className="flex gap-4 overflow-x-auto pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden scroll-smooth"
           >
-            {accounts?.map((account) => (
-              <AccountCard
-                key={account.accountId}
-                accountName={account.accountName}
-                accountType={account.accountType}
-                totalRevenue={account.totalRevenue}
-                totalExpense={account.totalExpense}
-              />
-            ))}
+            {accounts && accounts.length === 0 ? (
+              <Link
+                to="/accounts"
+                className="bg-white border-2 border-dashed border-slate-200 rounded-[24px] min-w-[260px] h-[140px] flex flex-col items-center justify-center gap-2 hover:border-indigo-400 hover:bg-indigo-50 transition-all group"
+              >
+                <div className="p-2 rounded-full bg-slate-100 group-hover:bg-indigo-100 transition-colors">
+                  <Plus
+                    size={18}
+                    className="text-slate-400 group-hover:text-indigo-600 transition-colors"
+                  />
+                </div>
+                <span className="text-xs font-black text-slate-400 group-hover:text-indigo-600 uppercase tracking-wider transition-colors">
+                  Criar primeira conta
+                </span>
+              </Link>
+            ) : (
+              accounts?.map((account) => (
+                <AccountCard
+                  key={account.accountId}
+                  accountName={account.accountName}
+                  accountType={account.accountType}
+                  totalRevenue={account.totalRevenue}
+                  totalExpense={account.totalExpense}
+                />
+              ))
+            )}
           </div>
 
           {showButtons && (
