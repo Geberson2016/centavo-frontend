@@ -12,12 +12,21 @@ interface AccountFormData {
 }
 
 const ACCOUNT_TYPES: AccountType[] = [
-  'CORRENTE',
-  'POUPANCA',
-  'INVESTIMENTO',
-  'DINHEIRO',
-  'CARTAO_CREDITO',
+  'CHECKING',
+  'SAVINGS',
+  'INVESTMENT',
+  'CASH',
+  'CREDIT_CARD',
 ];
+
+// Rotulo exibido para cada valor do contrato. Vira chave de i18n na Fase 6.
+const ACCOUNT_TYPE_LABELS: Record<AccountType, string> = {
+  CHECKING: 'Conta Corrente',
+  SAVINGS: 'Poupança',
+  INVESTMENT: 'Investimento',
+  CASH: 'Dinheiro',
+  CREDIT_CARD: 'Cartão de Crédito',
+};
 
 export function Accounts() {
   const { user } = useAuth();
@@ -27,7 +36,7 @@ export function Accounts() {
   const { register, handleSubmit, resetField, watch } =
     useForm<AccountFormData>({
       defaultValues: {
-        type: 'CORRENTE',
+        type: 'CHECKING',
         userId: user?.id,
       },
     });
@@ -87,7 +96,7 @@ export function Accounts() {
                     value={type}
                     className="hidden"
                   />
-                  {type.replace('_', ' ')}
+                  {ACCOUNT_TYPE_LABELS[type]}
                 </label>
               ))}
             </div>

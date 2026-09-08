@@ -6,13 +6,19 @@ import { BankIcon } from '../../components/BankIcon';
 import { Link } from 'react-router-dom';
 import { Plus } from 'lucide-react';
 
+// Rotulo exibido para cada valor do contrato. Vira chave de i18n na Fase 6.
+const TRANSACTION_TYPE_LABELS: Record<'INCOME' | 'EXPENSE', string> = {
+  EXPENSE: 'Despesa',
+  INCOME: 'Receita',
+};
+
 interface TransactionFormData {
   description: string;
   value: number;
   date: string;
   accountId: number;
   categoryId: number;
-  type: 'RECEITA' | 'DESPESA';
+  type: 'INCOME' | 'EXPENSE';
 }
 
 export function Transactions() {
@@ -24,7 +30,7 @@ export function Transactions() {
     useForm<TransactionFormData>({
       defaultValues: {
         date: new Date().toISOString().split('T')[0],
-        type: 'DESPESA',
+        type: 'EXPENSE',
       },
     });
 
@@ -65,7 +71,7 @@ export function Transactions() {
               O que aconteceu?
             </label>
             <div className="flex gap-4">
-              {['DESPESA', 'RECEITA'].map((t) => (
+              {(['EXPENSE', 'INCOME'] as const).map((t) => (
                 <label
                   key={t}
                   className={`flex-1 p-3 rounded-xl border-2 cursor-pointer transition-all text-center font-bold ${selectedType === t ? 'border-indigo-600 bg-indigo-50 text-indigo-600' : 'border-slate-100 text-slate-400'}`}
@@ -76,7 +82,7 @@ export function Transactions() {
                     value={t}
                     className="hidden"
                   />
-                  {t}
+                  {TRANSACTION_TYPE_LABELS[t]}
                 </label>
               ))}
             </div>
@@ -183,7 +189,7 @@ export function Transactions() {
             >
               <option value="">
                 {hasNoCategories
-                  ? `Nenhuma categoria de ${selectedType === 'DESPESA' ? 'despesa' : 'receita'} cadastrada`
+                  ? `Nenhuma categoria de ${selectedType === 'EXPENSE' ? 'despesa' : 'receita'} cadastrada`
                   : 'Selecione uma categoria'}
               </option>
               {filteredCategories.map((cat) => (

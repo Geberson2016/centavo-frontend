@@ -7,7 +7,7 @@ interface TransactionRequest {
   date: string;
   accountId: number;
   categoryId: number;
-  type: 'RECEITA' | 'DESPESA';
+  type: 'INCOME' | 'EXPENSE';
 }
 
 export function useCreateTransaction() {

@@ -6,7 +6,7 @@ export interface RecentTransaction {
   categoryName: string;
   date: string;
   value: number;
-  type: 'RECEITA' | 'DESPESA';
+  type: 'INCOME' | 'EXPENSE';
 }
 
 export function useRecentTransactions() {

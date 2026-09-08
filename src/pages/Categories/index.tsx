@@ -13,8 +13,19 @@ interface CategoryFormData {
   budgetType: BudgetType;
 }
 
-const TRANSACTION_TYPES: TransactionType[] = ['RECEITA', 'DESPESA'];
-const BUDGET_TYPES: BudgetType[] = ['FIXO', 'VARIAVEL'];
+const TRANSACTION_TYPES: TransactionType[] = ['INCOME', 'EXPENSE'];
+const BUDGET_TYPES: BudgetType[] = ['FIXED', 'VARIABLE'];
+
+// Rotulos exibidos para os valores do contrato. Viram chaves de i18n na Fase 6.
+const TRANSACTION_TYPE_LABELS: Record<TransactionType, string> = {
+  INCOME: 'Receita',
+  EXPENSE: 'Despesa',
+};
+
+const BUDGET_TYPE_LABELS: Record<BudgetType, string> = {
+  FIXED: 'Fixo',
+  VARIABLE: 'Variável',
+};
 
 export function Categories() {
   const { user } = useAuth();
@@ -23,8 +34,8 @@ export function Categories() {
   const { register, handleSubmit, resetField, watch } =
     useForm<CategoryFormData>({
       defaultValues: {
-        type: 'DESPESA',
-        budgetType: 'FIXO',
+        type: 'EXPENSE',
+        budgetType: 'FIXED',
         userId: user?.id,
       },
     });
@@ -87,7 +98,7 @@ export function Categories() {
                       value={type}
                       className="hidden"
                     />
-                    {type}
+                    {TRANSACTION_TYPE_LABELS[type]}
                   </label>
                 ))}
               </div>
@@ -114,7 +125,7 @@ export function Categories() {
                       value={bType}
                       className="hidden"
                     />
-                    {bType}
+                    {BUDGET_TYPE_LABELS[bType]}
                   </label>
                 ))}
               </div>

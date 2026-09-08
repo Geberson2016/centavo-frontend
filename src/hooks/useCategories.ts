@@ -4,7 +4,7 @@ import { api } from '../services/api';
 export interface Category {
   id: number;
   name: string;
-  type: 'RECEITA' | 'DESPESA';
+  type: 'INCOME' | 'EXPENSE';
 }
 
 export function useCategories() {

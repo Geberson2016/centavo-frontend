@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../services/api";
 
-export type TransactionType = "RECEITA" | "DESPESA";
-export type BudgetType = "FIXO" | "VARIAVEL";
+export type TransactionType = "INCOME" | "EXPENSE";
+export type BudgetType = "FIXED" | "VARIABLE";
 
 interface CategoryRequest {
   name: string;

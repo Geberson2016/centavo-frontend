@@ -11,31 +11,31 @@ const ACCOUNT_TYPE_CONFIG: Record<
   string,
   { label: string; icon: React.ElementType; color: string; bg: string }
 > = {
-  CARTAO_CREDITO: {
+  CREDIT_CARD: {
     label: 'Cartão de Crédito',
     icon: CreditCard,
     color: 'text-rose-500',
     bg: 'bg-rose-50',
   },
-  CORRENTE: {
+  CHECKING: {
     label: 'Conta Corrente',
     icon: Wallet,
     color: 'text-indigo-600',
     bg: 'bg-indigo-50',
   },
-  POUPANCA: {
+  SAVINGS: {
     label: 'Poupança',
     icon: Wallet,
     color: 'text-emerald-600',
     bg: 'bg-emerald-50',
   },
-  INVESTIMENTO: {
+  INVESTMENT: {
     label: 'Investimento',
     icon: TrendingUp,
     color: 'text-amber-600',
     bg: 'bg-amber-50',
   },
-  DINHEIRO: {
+  CASH: {
     label: 'Dinheiro',
     icon: Wallet,
     color: 'text-slate-600',

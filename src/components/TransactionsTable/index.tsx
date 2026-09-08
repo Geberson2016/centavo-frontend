@@ -85,7 +85,7 @@ export function TransactionsTable({
           </thead>
           <tbody className="divide-y divide-slate-50">
             {transactions.map((t, index) => {
-              const isRevenue = t.type === 'RECEITA';
+              const isRevenue = t.type === 'INCOME';
               const Icon = isRevenue ? TrendingUp : TrendingDown;
 
               return (

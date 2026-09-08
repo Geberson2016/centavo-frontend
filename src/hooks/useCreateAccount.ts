@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '../services/api';
 
-export type AccountType = 'CORRENTE' | 'POUPANCA' | 'INVESTIMENTO' | 'DINHEIRO' | 'CARTAO_CREDITO';
+export type AccountType = 'CHECKING' | 'SAVINGS' | 'INVESTMENT' | 'CASH' | 'CREDIT_CARD';
 
 interface AccountRequest {
   name: string;
