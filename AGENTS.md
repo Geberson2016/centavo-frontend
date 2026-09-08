@@ -12,7 +12,8 @@ O Centavo é um app de finanças pessoais: **React (Vite) → BFF (Node/TS) → 
 - **Português** — TODO o resto de texto humano: comentários no código, mensagens de commit, este `AGENTS.md`, o `CLAUDE.md`, `README`, seções de roadmap, descrições/summaries de endpoints no OpenAPI, ADRs e qualquer `plano.md` / documento de planejamento.
 - **Copy do app para o usuário final** — sempre via **i18n** (ver §1.2), nunca hardcoded.
 - Mensagens de commit seguem Conventional Commits: o prefixo é técnico (`feat:`, `fix:`, `chore:`…), o texto após o prefixo é em português.
-- **Documentos de planejamento** (planos, roadmaps de execução) vivem em `centavo-frontend/docs/planos/` (local único, cross-repo), em português, com nome descritivo.
+- **Documentos de planejamento** (planos, roadmaps de execução) vivem em `Centavo/docs/planos/` — o diretório **pai**, irmão de `centavo-backend/` e `centavo-frontend/` —, em português, com nome descritivo. Ficam fora dos dois repositórios de propósito: são cross-repo (backend + frontend + BFF) e não pertencem a nenhum deles.
+  > ⚠️ O diretório pai **não é um repositório git**, então esses documentos não têm histórico nem cópia no remoto — não existe `git revert` para eles. Versioná-los exigiria criar um repositório próprio para o `docs/`.
 
 ---
 
