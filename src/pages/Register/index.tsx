@@ -3,9 +3,18 @@ import { useCreateUser } from '../../hooks/useCreateUser';
 import { useNavigate } from 'react-router-dom';
 import { AuthFooter } from '../../components/AuthFooter';
 import { useTranslation } from 'react-i18next';
+import { useApiErrorToast } from '../../hooks/useApiErrorToast';
+
+interface RegisterFormData {
+  name: string;
+  email: string;
+  phone?: string;
+  password: string;
+}
 
 export function Register() {
   const { t } = useTranslation();
+  const showApiError = useApiErrorToast();
   const { mutate: createUser, isPending } = useCreateUser();
   const navigate = useNavigate();
 
@@ -13,12 +22,15 @@ export function Register() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<RegisterFormData>();
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: RegisterFormData) => {
     createUser(data, {
       onSuccess: () => {
         navigate('/login');
+      },
+      onError: (error) => {
+        showApiError(error, 'errors.createUser');
       },
     });
   };

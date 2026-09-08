@@ -8,16 +8,21 @@ import { Eye, EyeOff } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useApiErrorToast } from '../../hooks/useApiErrorToast';
 
+interface LoginFormData {
+  email: string;
+  password: string;
+}
+
 export function Login() {
   const { t } = useTranslation();
   const showApiError = useApiErrorToast();
   const { mutate: login, isPending } = useLogin();
   const navigate = useNavigate();
 
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit } = useForm<LoginFormData>();
   const [showPassword, setShowPassword] = useState(false);
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: LoginFormData) => {
     login(data, {
       onSuccess: (response) => {
         localStorage.setItem('token', response.token);

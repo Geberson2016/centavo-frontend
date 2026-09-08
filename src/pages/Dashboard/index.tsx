@@ -11,7 +11,11 @@ import { useTranslation } from 'react-i18next';
 
 export function Dashboard() {
   const { t, i18n } = useTranslation();
-  const { data: summary } = useSummary();
+  const {
+    data: summary,
+    isLoading: isSummaryLoading,
+    isError: isSummaryError,
+  } = useSummary();
   const {
     data: transactions = [],
     isLoading: isTransactionsLoading,
@@ -51,11 +55,13 @@ export function Dashboard() {
     return () => window.removeEventListener('resize', check);
   }, [accounts]);
 
-  if (isTransactionsLoading)
+  // O resumo entra no mesmo guarda das transacoes: sem ele os cards renderizariam
+  // valores vazios como se fossem zero, o que num app de finanças e pior que avisar.
+  if (isTransactionsLoading || isSummaryLoading)
     return (
       <div className="p-10 text-slate-500 font-bold">{t('common.loading')}</div>
     );
-  if (isTransactionsError)
+  if (isTransactionsError || isSummaryError)
     return (
       <div className="p-10 text-red-500 font-bold">
         {t('common.serverError')}
