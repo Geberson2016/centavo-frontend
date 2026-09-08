@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { LanguageSwitcher } from '../LanguageSwitcher';
 import logoImg from "../../assets/logo.svg";
 
 export function AuthFooter() {
@@ -15,6 +16,7 @@ export function AuthFooter() {
           </span>
         </div>
 
+        <div className="flex items-center gap-6">
         <nav className="flex gap-6">
           <a href="#" className="text-xs font-bold text-slate-400 hover:text-indigo-600 transition-colors">
             {t('footer.terms')}
@@ -26,6 +28,8 @@ export function AuthFooter() {
             {t('footer.support')}
           </a>
         </nav>
+          <LanguageSwitcher tone="dark" />
+        </div>
       </div>
     </footer>
   );

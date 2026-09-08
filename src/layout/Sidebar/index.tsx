@@ -11,6 +11,7 @@ import logoImg from '../../assets/logo.svg';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../../hooks/useAuth';
 import { useTranslation } from 'react-i18next';
+import { LanguageSwitcher } from '../../components/LanguageSwitcher';
 
 export function Sidebar() {
   const { t } = useTranslation();
@@ -74,7 +75,8 @@ export function Sidebar() {
         />
       </nav>
 
-      <div className="p-4 border-t border-slate-800 flex items-center gap-3 justify-end">
+      <div className="p-4 border-t border-slate-800 flex items-center gap-3 justify-between">
+        <LanguageSwitcher tone="dark" />
         <button
           onClick={handleLogout}
           title={t('nav.logout')}
@@ -88,18 +90,36 @@ export function Sidebar() {
   );
 }
 
-function NavItem({ to, icon: Icon, label, active }: any) {
-  return (
-    <Link
-      to={to}
-      className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
-        active
-          ? 'bg-[#2d324a] text-white shadow-lg font-bold'
-          : 'hover:bg-slate-800 hover:text-slate-200'
-      }`}
-    >
+interface NavItemProps {
+  to?: string;
+  icon: React.ElementType;
+  label?: string;
+  active?: boolean;
+}
+
+function NavItem({ to, icon: Icon, label, active }: NavItemProps) {
+  const conteudo = (
+    <>
       <Icon size={20} />
-      <span className="text-sm">{label}</span>
+      {label && <span className="text-sm">{label}</span>}
+    </>
+  );
+
+  const classe = `flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
+    active
+      ? 'bg-[#2d324a] text-white shadow-lg font-bold'
+      : 'hover:bg-slate-800 hover:text-slate-200'
+  }`;
+
+  // Sem destino o item e apenas visual — e o caso do botao de sair, que ja
+  // tem o seu proprio <button> em volta. Aninhar um Link ali seria invalido.
+  if (!to) {
+    return <span className={classe}>{conteudo}</span>;
+  }
+
+  return (
+    <Link to={to} className={classe}>
+      {conteudo}
     </Link>
   );
 }

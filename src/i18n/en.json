@@ -2,7 +2,8 @@
   "common": {
     "logoAlt": "Centavo logo",
     "loading": "Loading data...",
-    "serverError": "Could not reach the server."
+    "serverError": "Could not reach the server.",
+    "pageTitle": "Centavo - Your Personal Finance Manager"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -125,6 +126,13 @@
       "FIXED": "Fixed",
       "VARIABLE": "Variable"
     }
+  },
+  "language": {
+    "label": "Language",
+    "pt-BR": "Portuguese (Brazil)",
+    "pt-BRShort": "PT",
+    "en": "English",
+    "enShort": "EN"
   },
   "errors": {
     "GENERIC": "Something went wrong. Please try again.",

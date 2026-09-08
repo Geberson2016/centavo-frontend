@@ -2,7 +2,8 @@
   "common": {
     "logoAlt": "Logo do Centavo",
     "loading": "Carregando dados...",
-    "serverError": "Erro ao conectar com o servidor."
+    "serverError": "Erro ao conectar com o servidor.",
+    "pageTitle": "Centavo - Seu Controle Financeiro"
   },
   "nav": {
     "dashboard": "Painel",
@@ -125,6 +126,13 @@
       "FIXED": "Fixo",
       "VARIABLE": "Variável"
     }
+  },
+  "language": {
+    "label": "Idioma",
+    "pt-BR": "Português (Brasil)",
+    "pt-BRShort": "PT",
+    "en": "Inglês",
+    "enShort": "EN"
   },
   "errors": {
     "GENERIC": "Algo deu errado. Tente novamente.",
