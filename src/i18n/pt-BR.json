@@ -1,5 +1,129 @@
 {
   "common": {
-    "appName": "Centavo"
+    "logoAlt": "Logo do Centavo",
+    "loading": "Carregando dados...",
+    "serverError": "Erro ao conectar com o servidor."
+  },
+  "nav": {
+    "dashboard": "Painel",
+    "transactions": "Transações",
+    "accounts": "Contas",
+    "categories": "Categorias",
+    "users": "Usuários",
+    "logout": "Sair"
+  },
+  "footer": {
+    "tagline": "Organize suas finanças com facilidade",
+    "terms": "TERMOS DE USO",
+    "privacy": "PRIVACIDADE",
+    "support": "SUPORTE"
+  },
+  "login": {
+    "title": "Entrar",
+    "subtitle": "Bem-vindo de volta ao Centavo.",
+    "email": "E-mail",
+    "password": "Senha",
+    "submit": "ENTRAR",
+    "submitting": "ENTRANDO...",
+    "noAccount": "Não tem conta?",
+    "createAccount": "Criar conta"
+  },
+  "register": {
+    "title": "Criar Conta",
+    "subtitle": "Comece a organizar suas finanças hoje.",
+    "name": "Nome Completo",
+    "email": "E-mail",
+    "phone": "Telefone",
+    "phonePlaceholder": "(00) 00000-0000",
+    "password": "Senha Forte",
+    "passwordWeak": "Senha fraca",
+    "passwordRule": "Mínimo 8 caracteres, uma letra maiúscula e um número.",
+    "submit": "FINALIZAR CADASTRO",
+    "submitting": "PROCESSANDO..."
+  },
+  "dashboard": {
+    "title": "Painel",
+    "addTransaction": "Nova transação",
+    "myAccounts": "Minhas Contas",
+    "createFirstAccount": "Criar primeira conta",
+    "cards": {
+      "totalBalance": "Saldo Total",
+      "totalBalanceDetail": "Histórico acumulado",
+      "creditCardBill": "Fatura do Mês",
+      "creditCardBillDetail": "Cartão de crédito",
+      "monthlySavings": "Saldo do Mês",
+      "monthlySavingsDetail": "Receitas - Despesas",
+      "expense": "Despesas",
+      "revenue": "Receita",
+      "currentMonth": "Mês atual",
+      "scheduledRevenue": "Receita Prevista",
+      "scheduledExpense": "Despesa Prevista",
+      "scheduledDetail": "Agendamentos futuros"
+    }
+  },
+  "transactionsTable": {
+    "title": "Transações Recentes",
+    "subtitle": "Últimos 30 dias",
+    "loading": "Carregando transações...",
+    "error": "Erro ao carregar transações.",
+    "empty": "Nenhuma transação nos últimos 30 dias.",
+    "description": "Descrição",
+    "category": "Categoria",
+    "date": "Data",
+    "amount": "Valor"
+  },
+  "accounts": {
+    "title": "Nova Conta",
+    "name": "Nome da Conta",
+    "namePlaceholder": "Ex: Bradesco Corrente",
+    "type": "Tipo de Conta"
+  },
+  "categories": {
+    "title": "Nova Categoria",
+    "name": "Nome da Categoria",
+    "namePlaceholder": "Ex: Supermercado ou Salário",
+    "type": "Tipo",
+    "budget": "Orçamento"
+  },
+  "transactions": {
+    "title": "Nova Transação",
+    "whatHappened": "O que aconteceu?",
+    "description": "Descrição",
+    "descriptionPlaceholder": "Ex: Cemig Energia",
+    "value": "Valor",
+    "date": "Data",
+    "account": "Conta",
+    "createAccount": "Criar conta",
+    "category": "Categoria",
+    "createCategory": "Criar categoria",
+    "selectCategory": "Selecione uma categoria",
+    "noCategoryOfType": "Nenhuma categoria de {{type}} cadastrada"
+  },
+  "notFound": {
+    "code": "404",
+    "title": "Página não encontrada",
+    "message": "Desculpe, a página que você está procurando não existe ou foi movida. Verifique o URL e tente novamente.",
+    "back": "Voltar para o Painel"
+  },
+  "enums": {
+    "accountType": {
+      "CHECKING": "Conta Corrente",
+      "SAVINGS": "Poupança",
+      "INVESTMENT": "Investimento",
+      "CASH": "Dinheiro",
+      "CREDIT_CARD": "Cartão de Crédito"
+    },
+    "transactionType": {
+      "INCOME": "Receita",
+      "EXPENSE": "Despesa"
+    },
+    "transactionTypeLower": {
+      "INCOME": "receita",
+      "EXPENSE": "despesa"
+    },
+    "budgetType": {
+      "FIXED": "Fixo",
+      "VARIABLE": "Variável"
+    }
   }
 }

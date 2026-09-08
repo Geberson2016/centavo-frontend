@@ -5,6 +5,7 @@ import {
   type BudgetType,
 } from '../../hooks/useCreateCategory';
 import { useAuth } from '../../hooks/useAuth';
+import { useTranslation } from 'react-i18next';
 
 interface CategoryFormData {
   name: string;
@@ -16,18 +17,9 @@ interface CategoryFormData {
 const TRANSACTION_TYPES: TransactionType[] = ['INCOME', 'EXPENSE'];
 const BUDGET_TYPES: BudgetType[] = ['FIXED', 'VARIABLE'];
 
-// Rotulos exibidos para os valores do contrato. Viram chaves de i18n na Fase 6.
-const TRANSACTION_TYPE_LABELS: Record<TransactionType, string> = {
-  INCOME: 'Receita',
-  EXPENSE: 'Despesa',
-};
-
-const BUDGET_TYPE_LABELS: Record<BudgetType, string> = {
-  FIXED: 'Fixo',
-  VARIABLE: 'Variável',
-};
 
 export function Categories() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { mutate: createCategory, isPending } = useCreateCategory();
 
@@ -58,7 +50,7 @@ export function Categories() {
     <div className="max-w-6xl mx-auto">
       <header className="mb-10">
         <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight">
-          Nova Categoria
+          {t('categories.title')}
         </h1>
       </header>
 
@@ -67,11 +59,11 @@ export function Categories() {
           {/* Nome da Categoria */}
           <div>
             <label className="block text-sm font-bold text-slate-700 mb-2">
-              Nome da Categoria
+              {t('categories.name')}
             </label>
             <input
               {...register('name', { required: true })}
-              placeholder="Ex: Supermercado ou Salário"
+              placeholder={t('categories.namePlaceholder')}
               className="w-full p-3 rounded-xl border border-slate-200 focus:outline-indigo-600"
             />
           </div>
@@ -80,7 +72,7 @@ export function Categories() {
             {/* Tipo de Transação */}
             <div>
               <label className="block text-sm font-bold text-slate-700 mb-2">
-                Tipo
+                {t('categories.type')}
               </label>
               <div className="flex gap-3">
                 {TRANSACTION_TYPES.map((type) => (
@@ -98,7 +90,7 @@ export function Categories() {
                       value={type}
                       className="hidden"
                     />
-                    {TRANSACTION_TYPE_LABELS[type]}
+                    {t(`enums.transactionType.${type}`)}
                   </label>
                 ))}
               </div>
@@ -107,7 +99,7 @@ export function Categories() {
             {/* Tipo de Orçamento */}
             <div className="md:border-l md:border-slate-100 md:pl-8">
               <label className="block text-sm font-bold text-slate-700 mb-2">
-                Orçamento
+                {t('categories.budget')}
               </label>
               <div className="flex gap-3">
                 {BUDGET_TYPES.map((bType) => (
@@ -125,7 +117,7 @@ export function Categories() {
                       value={bType}
                       className="hidden"
                     />
-                    {BUDGET_TYPE_LABELS[bType]}
+                    {t(`enums.budgetType.${bType}`)}
                   </label>
                 ))}
               </div>

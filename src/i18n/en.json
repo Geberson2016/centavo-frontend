@@ -1,5 +1,129 @@
 {
   "common": {
-    "appName": "Centavo"
+    "logoAlt": "Centavo logo",
+    "loading": "Loading data...",
+    "serverError": "Could not reach the server."
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "transactions": "Transactions",
+    "accounts": "Accounts",
+    "categories": "Categories",
+    "users": "Users",
+    "logout": "Sign out"
+  },
+  "footer": {
+    "tagline": "Organize your finances with ease",
+    "terms": "TERMS OF USE",
+    "privacy": "PRIVACY",
+    "support": "SUPPORT"
+  },
+  "login": {
+    "title": "Sign in",
+    "subtitle": "Welcome back to Centavo.",
+    "email": "E-mail",
+    "password": "Password",
+    "submit": "SIGN IN",
+    "submitting": "SIGNING IN...",
+    "noAccount": "Don't have an account?",
+    "createAccount": "Create account"
+  },
+  "register": {
+    "title": "Create account",
+    "subtitle": "Start organizing your finances today.",
+    "name": "Full name",
+    "email": "E-mail",
+    "phone": "Phone",
+    "phonePlaceholder": "(00) 00000-0000",
+    "password": "Strong password",
+    "passwordWeak": "Weak password",
+    "passwordRule": "At least 8 characters, one uppercase letter and one number.",
+    "submit": "COMPLETE SIGN UP",
+    "submitting": "PROCESSING..."
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "addTransaction": "New transaction",
+    "myAccounts": "My accounts",
+    "createFirstAccount": "Create your first account",
+    "cards": {
+      "totalBalance": "Total balance",
+      "totalBalanceDetail": "All-time history",
+      "creditCardBill": "This month's bill",
+      "creditCardBillDetail": "Credit card",
+      "monthlySavings": "Monthly balance",
+      "monthlySavingsDetail": "Income - Expenses",
+      "expense": "Expenses",
+      "revenue": "Income",
+      "currentMonth": "Current month",
+      "scheduledRevenue": "Scheduled income",
+      "scheduledExpense": "Scheduled expenses",
+      "scheduledDetail": "Future entries"
+    }
+  },
+  "transactionsTable": {
+    "title": "Recent transactions",
+    "subtitle": "Last 30 days",
+    "loading": "Loading transactions...",
+    "error": "Could not load transactions.",
+    "empty": "No transactions in the last 30 days.",
+    "description": "Description",
+    "category": "Category",
+    "date": "Date",
+    "amount": "Amount"
+  },
+  "accounts": {
+    "title": "New account",
+    "name": "Account name",
+    "namePlaceholder": "e.g. Chase Checking",
+    "type": "Account type"
+  },
+  "categories": {
+    "title": "New category",
+    "name": "Category name",
+    "namePlaceholder": "e.g. Groceries or Salary",
+    "type": "Type",
+    "budget": "Budget"
+  },
+  "transactions": {
+    "title": "New transaction",
+    "whatHappened": "What happened?",
+    "description": "Description",
+    "descriptionPlaceholder": "e.g. Electricity bill",
+    "value": "Amount",
+    "date": "Date",
+    "account": "Account",
+    "createAccount": "Create account",
+    "category": "Category",
+    "createCategory": "Create category",
+    "selectCategory": "Select a category",
+    "noCategoryOfType": "No {{type}} category registered"
+  },
+  "notFound": {
+    "code": "404",
+    "title": "Page not found",
+    "message": "Sorry, the page you are looking for does not exist or has been moved. Check the URL and try again.",
+    "back": "Back to dashboard"
+  },
+  "enums": {
+    "accountType": {
+      "CHECKING": "Checking",
+      "SAVINGS": "Savings",
+      "INVESTMENT": "Investment",
+      "CASH": "Cash",
+      "CREDIT_CARD": "Credit card"
+    },
+    "transactionType": {
+      "INCOME": "Income",
+      "EXPENSE": "Expense"
+    },
+    "transactionTypeLower": {
+      "INCOME": "income",
+      "EXPENSE": "expense"
+    },
+    "budgetType": {
+      "FIXED": "Fixed",
+      "VARIABLE": "Variable"
+    }
   }
 }

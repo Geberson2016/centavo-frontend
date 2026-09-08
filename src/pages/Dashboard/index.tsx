@@ -7,8 +7,10 @@ import { useSummary } from '../../hooks/useSummary';
 import { useEffect, useRef, useState } from 'react';
 import { useAccountSummary } from '../../hooks/useAccountSummary';
 import { useRecentTransactions } from '../../hooks/useRecentTransactions';
+import { useTranslation } from 'react-i18next';
 
 export function Dashboard() {
+  const { t, i18n } = useTranslation();
   const { data: summary } = useSummary();
   const {
     data: transactions = [],
@@ -17,7 +19,7 @@ export function Dashboard() {
   } = useRecentTransactions();
 
   const formatCurrency = (value: number = 0) => {
-    return new Intl.NumberFormat('pt-BR', {
+    return new Intl.NumberFormat(i18n.language, {
       style: 'currency',
       currency: 'BRL',
     }).format(value);
@@ -51,12 +53,12 @@ export function Dashboard() {
 
   if (isTransactionsLoading)
     return (
-      <div className="p-10 text-slate-500 font-bold">Carregando dados...</div>
+      <div className="p-10 text-slate-500 font-bold">{t('common.loading')}</div>
     );
   if (isTransactionsError)
     return (
       <div className="p-10 text-red-500 font-bold">
-        Erro ao conectar com o servidor.
+        {t('common.serverError')}
       </div>
     );
 
@@ -64,7 +66,7 @@ export function Dashboard() {
     <div className="max-w-6xl mx-auto">
       <header className="flex justify-between items-center mb-10">
         <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight">
-          Dashboard
+          {t('dashboard.title')}
         </h1>
         <a
           href="/transactions"
@@ -72,55 +74,55 @@ export function Dashboard() {
           items-center gap-2 font-bold text-sm shadow-indigo-200 shadow-lg hover:bg-slate-800 transition-all active:scale-95"
         >
           <Plus size={18} strokeWidth={3} />
-          Add transaction
+          {t('dashboard.addTransaction')}
         </a>
       </header>
 
       <div className="mb-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <SummaryCard
-            title="Saldo Total"
+            title={t('dashboard.cards.totalBalance')}
             value={formatCurrency(summary?.totalBalance)}
-            detail="Histórico acumulado"
+            detail={t('dashboard.cards.totalBalanceDetail')}
             type="wallet"
           />
           <SummaryCard
-            title="Fatura do Mês"
+            title={t('dashboard.cards.creditCardBill')}
             value={formatCurrency(summary?.creditCardBill)}
-            detail="Cartão de crédito"
+            detail={t('dashboard.cards.creditCardBillDetail')}
             type="credit"
           />
           <SummaryCard
-            title="Saldo do Mês"
+            title={t('dashboard.cards.monthlySavings')}
             value={formatCurrency(summary?.monthlySavings)}
-            detail="Receitas - Despesas"
+            detail={t('dashboard.cards.monthlySavingsDetail')}
             type="piggyBank"
           />
 
           {showAllCards && (
             <>
               <SummaryCard
-                title="Despesas"
+                title={t('dashboard.cards.expense')}
                 value={formatCurrency(summary?.totalExpense)}
-                detail="Mês atual"
+                detail={t('dashboard.cards.currentMonth')}
                 type="expense"
               />
               <SummaryCard
-                title="Receita"
+                title={t('dashboard.cards.revenue')}
                 value={formatCurrency(summary?.totalRevenue)}
-                detail="Mês atual"
+                detail={t('dashboard.cards.currentMonth')}
                 type="revenue"
               />
               <SummaryCard
-                title="Receita Prevista"
+                title={t('dashboard.cards.scheduledRevenue')}
                 value={formatCurrency(summary?.scheduledRevenue)}
-                detail="Agendamentos futuros"
+                detail={t('dashboard.cards.scheduledDetail')}
                 type="revenue"
               />
               <SummaryCard
-                title="Despesa Prevista"
+                title={t('dashboard.cards.scheduledExpense')}
                 value={formatCurrency(summary?.scheduledExpense)}
-                detail="Agendamentos futuros"
+                detail={t('dashboard.cards.scheduledDetail')}
                 type="expense"
               />
             </>
@@ -137,7 +139,7 @@ export function Dashboard() {
 
       <section className="mb-12">
         <h2 className="text-xl font-black text-slate-800 mb-6 tracking-tight">
-          My Accounts
+          {t('dashboard.myAccounts')}
         </h2>
         <div className="relative">
           {showButtons && (
@@ -165,7 +167,7 @@ export function Dashboard() {
                   />
                 </div>
                 <span className="text-xs font-black text-slate-400 group-hover:text-indigo-600 uppercase tracking-wider transition-colors">
-                  Criar primeira conta
+                  {t('dashboard.createFirstAccount')}
                 </span>
               </Link>
             ) : (

@@ -5,12 +5,7 @@ import { useCreateTransaction } from '../../hooks/useCreateTransaction';
 import { BankIcon } from '../../components/BankIcon';
 import { Link } from 'react-router-dom';
 import { Plus } from 'lucide-react';
-
-// Rotulo exibido para cada valor do contrato. Vira chave de i18n na Fase 6.
-const TRANSACTION_TYPE_LABELS: Record<'INCOME' | 'EXPENSE', string> = {
-  EXPENSE: 'Despesa',
-  INCOME: 'Receita',
-};
+import { useTranslation } from 'react-i18next';
 
 interface TransactionFormData {
   description: string;
@@ -22,6 +17,7 @@ interface TransactionFormData {
 }
 
 export function Transactions() {
+  const { t } = useTranslation();
   const { data: accounts } = useAccounts();
   const { data: categories } = useCategories();
   const { mutate: createTransaction, isPending } = useCreateTransaction();
@@ -61,28 +57,28 @@ export function Transactions() {
     <div className="max-w-6xl mx-auto">
       <header className="mb-10">
         <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight">
-          Nova Transação
+          {t('transactions.title')}
         </h1>
       </header>
       <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div>
             <label className="block text-sm font-bold text-slate-700 mb-2">
-              O que aconteceu?
+              {t('transactions.whatHappened')}
             </label>
             <div className="flex gap-4">
-              {(['EXPENSE', 'INCOME'] as const).map((t) => (
+              {(['EXPENSE', 'INCOME'] as const).map((type) => (
                 <label
-                  key={t}
-                  className={`flex-1 p-3 rounded-xl border-2 cursor-pointer transition-all text-center font-bold ${selectedType === t ? 'border-indigo-600 bg-indigo-50 text-indigo-600' : 'border-slate-100 text-slate-400'}`}
+                  key={type}
+                  className={`flex-1 p-3 rounded-xl border-2 cursor-pointer transition-all text-center font-bold ${selectedType === type ? 'border-indigo-600 bg-indigo-50 text-indigo-600' : 'border-slate-100 text-slate-400'}`}
                 >
                   <input
                     type="radio"
                     {...register('type')}
-                    value={t}
+                    value={type}
                     className="hidden"
                   />
-                  {TRANSACTION_TYPE_LABELS[t]}
+                  {t(`enums.transactionType.${type}`)}
                 </label>
               ))}
             </div>
@@ -90,11 +86,11 @@ export function Transactions() {
 
           <div>
             <label className="block text-sm font-bold text-slate-700 mb-2">
-              Descrição
+              {t('transactions.description')}
             </label>
             <input
               {...register('description', { required: true })}
-              placeholder="Ex: Cemig Energia"
+              placeholder={t('transactions.descriptionPlaceholder')}
               className="w-full p-3 rounded-xl border border-slate-200 focus:outline-indigo-600"
             />
           </div>
@@ -102,7 +98,7 @@ export function Transactions() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-bold text-slate-700 mb-2">
-                Valor
+                {t('transactions.value')}
               </label>
               <input
                 type="number"
@@ -113,7 +109,7 @@ export function Transactions() {
             </div>
             <div>
               <label className="block text-sm font-bold text-slate-700 mb-2">
-                Data
+                {t('transactions.date')}
               </label>
               <input
                 type="date"
@@ -127,7 +123,7 @@ export function Transactions() {
           <div>
             <div className="flex justify-between items-center mb-2">
               <label className="block text-sm font-bold text-slate-700">
-                Conta
+                {t('transactions.account')}
               </label>
               {hasNoAccounts && (
                 <Link
@@ -135,7 +131,7 @@ export function Transactions() {
                   className="flex items-center gap-1 text-xs font-bold text-indigo-600 hover:underline"
                 >
                   <Plus size={12} />
-                  Criar conta
+                  {t('transactions.createAccount')}
                 </Link>
               )}
             </div>
@@ -167,7 +163,7 @@ export function Transactions() {
           <div>
             <div className="flex justify-between items-center mb-2">
               <label className="block text-sm font-bold text-slate-700">
-                Categoria
+                {t('transactions.category')}
               </label>
               {hasNoCategories && (
                 <Link
@@ -175,7 +171,7 @@ export function Transactions() {
                   className="flex items-center gap-1 text-xs font-bold text-indigo-600 hover:underline"
                 >
                   <Plus size={12} />
-                  Criar categoria
+                  {t('transactions.createCategory')}
                 </Link>
               )}
             </div>
@@ -189,8 +185,10 @@ export function Transactions() {
             >
               <option value="">
                 {hasNoCategories
-                  ? `Nenhuma categoria de ${selectedType === 'EXPENSE' ? 'despesa' : 'receita'} cadastrada`
-                  : 'Selecione uma categoria'}
+                  ? t('transactions.noCategoryOfType', {
+                      type: t(`enums.transactionTypeLower.${selectedType}`),
+                    })
+                  : t('transactions.selectCategory')}
               </option>
               {filteredCategories.map((cat) => (
                 <option key={cat.id} value={cat.id}>

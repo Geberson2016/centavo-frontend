@@ -10,8 +10,10 @@ import {
 import logoImg from '../../assets/logo.svg';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../../hooks/useAuth';
+import { useTranslation } from 'react-i18next';
 
 export function Sidebar() {
+  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -28,7 +30,7 @@ export function Sidebar() {
   return (
     <aside className="w-64 bg-slate-900 h-screen text-slate-400 flex flex-col fixed left-0 top-0">
       <div className="p-6 flex items-center gap-3">
-        <img src={logoImg} className="w-52" alt="Centavo Logo" />
+        <img src={logoImg} className="w-52" alt={t('common.logoAlt')} />
       </div>
 
       <div className="px-4 mb-6">
@@ -43,31 +45,31 @@ export function Sidebar() {
         <NavItem
           to="/dashboard"
           icon={LayoutDashboard}
-          label="Dashboard"
+          label={t('nav.dashboard')}
           active={location.pathname === '/dashboard'}
         />
         <NavItem
           to="/transactions"
           icon={ReceiptText}
-          label="Transactions"
+          label={t('nav.transactions')}
           active={location.pathname === '/transactions'}
         />
         <NavItem
           to="/accounts"
           icon={Wallet}
-          label="Accounts"
+          label={t('nav.accounts')}
           active={location.pathname === '/accounts'}
         />
         <NavItem
           to="/categories"
           icon={Tags}
-          label="Categories"
+          label={t('nav.categories')}
           active={location.pathname === '/categories'}
         />
         <NavItem
           to="/users"
           icon={Users}
-          label="Users"
+          label={t('nav.users')}
           active={location.pathname === '/users'}
         />
       </nav>
@@ -75,6 +77,8 @@ export function Sidebar() {
       <div className="p-4 border-t border-slate-800 flex items-center gap-3 justify-end">
         <button
           onClick={handleLogout}
+          title={t('nav.logout')}
+          aria-label={t('nav.logout')}
           className="text-slate-400 hover:text-white transition-colors text-xs font-bold uppercase tracking-wider"
         >
           <NavItem icon={LogOut} />

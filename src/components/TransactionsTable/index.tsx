@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 import type { RecentTransaction } from '../../hooks/useRecentTransactions';
 
@@ -12,9 +13,11 @@ export function TransactionsTable({
   isLoading,
   isError,
 }: TransactionsTableProps) {
+  const { t, i18n } = useTranslation();
+
   const formatDate = (dateStr: string) => {
     const [year, month, day] = dateStr.split('-').map(Number);
-    return new Date(year, month - 1, day).toLocaleDateString('pt-BR', {
+    return new Date(year, month - 1, day).toLocaleDateString(i18n.language, {
       day: '2-digit',
       month: 'short',
       year: 'numeric',
@@ -22,7 +25,7 @@ export function TransactionsTable({
   };
 
   const formatCurrency = (value: number) =>
-    value.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+    value.toLocaleString(i18n.language, { minimumFractionDigits: 2 });
 
   const isFuture = (dateStr: string) => {
     const [year, month, day] = dateStr.split('-').map(Number);
@@ -39,29 +42,29 @@ export function TransactionsTable({
       <div className="p-6 border-b border-slate-50 flex justify-between items-center">
         <div>
           <h3 className="font-black text-slate-800 tracking-tight">
-            Recent Transactions
+            {t('transactionsTable.title')}
           </h3>
           <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
-            Últimos 30 dias
+            {t('transactionsTable.subtitle')}
           </p>
         </div>
       </div>
 
       {isLoading && (
         <div className="p-10 text-center text-slate-400 font-bold text-sm">
-          Carregando transações...
+          {t('transactionsTable.loading')}
         </div>
       )}
 
       {isError && (
         <div className="p-10 text-center text-red-400 font-bold text-sm">
-          Erro ao carregar transações.
+          {t('transactionsTable.error')}
         </div>
       )}
 
       {!isLoading && !isError && transactions?.length === 0 && (
         <div className="p-10 text-center text-slate-400 font-bold text-sm">
-          Nenhuma transação nos últimos 30 dias.
+          {t('transactionsTable.empty')}
         </div>
       )}
 
@@ -70,16 +73,16 @@ export function TransactionsTable({
           <thead className="bg-slate-50/50">
             <tr>
               <th className="px-6 py-4 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                Description
+                {t('transactionsTable.description')}
               </th>
               <th className="px-6 py-4 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                Category
+                {t('transactionsTable.category')}
               </th>
               <th className="px-6 py-4 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                Date
+                {t('transactionsTable.date')}
               </th>
               <th className="px-6 py-4 text-right text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                Amount
+                {t('transactionsTable.amount')}
               </th>
             </tr>
           </thead>

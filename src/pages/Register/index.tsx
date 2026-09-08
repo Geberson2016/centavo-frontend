@@ -2,8 +2,10 @@ import { useForm } from 'react-hook-form';
 import { useCreateUser } from '../../hooks/useCreateUser';
 import { useNavigate } from 'react-router-dom';
 import { AuthFooter } from '../../components/AuthFooter';
+import { useTranslation } from 'react-i18next';
 
 export function Register() {
+  const { t } = useTranslation();
   const { mutate: createUser, isPending } = useCreateUser();
   const navigate = useNavigate();
 
@@ -27,17 +29,17 @@ export function Register() {
         <div className="max-w-2xl w-full bg-white p-10 rounded-3xl shadow-xl border border-slate-100">
           <header className="text-center mb-8">
             <h1 className="text-3xl font-black text-slate-900 tracking-tighter">
-              Criar Conta
+              {t('register.title')}
             </h1>
             <p className="text-slate-500 text-sm mt-2">
-              Comece a organizar suas finanças hoje.
+              {t('register.subtitle')}
             </p>
           </header>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
               <label className="block text-xs font-bold text-slate-700 uppercase mb-1 ml-1">
-                Nome Completo
+                {t('register.name')}
               </label>
               <input
                 {...register('name', { required: true })}
@@ -48,7 +50,7 @@ export function Register() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-bold text-slate-700 uppercase mb-1 ml-1">
-                  E-mail
+                  {t('register.email')}
                 </label>
                 <input
                   type="email"
@@ -58,11 +60,11 @@ export function Register() {
               </div>
               <div>
                 <label className="block text-xs font-bold text-slate-700 uppercase mb-1 ml-1">
-                  Telefone
+                  {t('register.phone')}
                 </label>
                 <input
                   {...register('phone')}
-                  placeholder="(00) 00000-0000"
+                  placeholder={t('register.phonePlaceholder')}
                   className="w-full p-3 rounded-xl border border-slate-200 focus:outline-indigo-600 bg-slate-50"
                 />
               </div>
@@ -70,7 +72,7 @@ export function Register() {
 
             <div>
               <label className="block text-xs font-bold text-slate-700 uppercase mb-1 ml-1">
-                Senha Forte
+                {t('register.password')}
               </label>
               <input
                 type="password"
@@ -79,13 +81,13 @@ export function Register() {
                   minLength: 8,
                   validate: (value) =>
                     (/[A-Z]/.test(value) && /[0-9]/.test(value)) ||
-                    'Senha fraca',
+                    t('register.passwordWeak'),
                 })}
                 className="w-full p-3 rounded-xl border border-slate-200 focus:outline-indigo-600 bg-slate-50"
               />
               {errors.password && (
                 <span className="text-[10px] text-red-500 font-bold ml-1">
-                  Mínimo 8 caracteres, uma letra maiúscula e um número.
+                  {t('register.passwordRule')}
                 </span>
               )}
             </div>
@@ -94,7 +96,7 @@ export function Register() {
               disabled={isPending}
               className="w-full bg-slate-900 text-white p-4 rounded-2xl font-black hover:bg-slate-800 transition-all shadow-lg shadow-slate-200 disabled:opacity-50 mt-4"
             >
-              {isPending ? 'PROCESSANDO...' : 'FINALIZAR CADASTRO'}
+              {isPending ? t('register.submitting') : t('register.submit')}
             </button>
           </form>
         </div>

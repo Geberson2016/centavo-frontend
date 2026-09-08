@@ -4,6 +4,7 @@ import {
   type AccountType,
 } from '../../hooks/useCreateAccount';
 import { useAuth } from '../../hooks/useAuth';
+import { useTranslation } from 'react-i18next';
 
 interface AccountFormData {
   name: string;
@@ -19,16 +20,9 @@ const ACCOUNT_TYPES: AccountType[] = [
   'CREDIT_CARD',
 ];
 
-// Rotulo exibido para cada valor do contrato. Vira chave de i18n na Fase 6.
-const ACCOUNT_TYPE_LABELS: Record<AccountType, string> = {
-  CHECKING: 'Conta Corrente',
-  SAVINGS: 'Poupança',
-  INVESTMENT: 'Investimento',
-  CASH: 'Dinheiro',
-  CREDIT_CARD: 'Cartão de Crédito',
-};
 
 export function Accounts() {
+  const { t } = useTranslation();
   const { user } = useAuth();
 
   const { mutate: createAccount, isPending } = useCreateAccount();
@@ -58,7 +52,7 @@ export function Accounts() {
     <div className="max-w-6xl mx-auto">
       <header className="mb-10">
         <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight">
-          Nova Conta
+          {t('accounts.title')}
         </h1>
       </header>
       <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
@@ -66,11 +60,11 @@ export function Accounts() {
           {/* Nome da Conta */}
           <div>
             <label className="block text-sm font-bold text-slate-700 mb-2">
-              Nome da Conta
+              {t('accounts.name')}
             </label>
             <input
               {...register('name', { required: true })}
-              placeholder="Ex: Bradesco Corrente"
+              placeholder={t('accounts.namePlaceholder')}
               className="w-full p-3 rounded-xl border border-slate-200 focus:outline-indigo-600"
             />
           </div>
@@ -78,7 +72,7 @@ export function Accounts() {
           {/* Tipo de Conta */}
           <div>
             <label className="block text-sm font-bold text-slate-700 mb-2">
-              Tipo de Conta
+              {t('accounts.type')}
             </label>
             <div className="grid grid-cols-2 gap-3">
               {ACCOUNT_TYPES.map((type) => (
@@ -96,7 +90,7 @@ export function Accounts() {
                     value={type}
                     className="hidden"
                   />
-                  {ACCOUNT_TYPE_LABELS[type]}
+                  {t(`enums.accountType.${type}`)}
                 </label>
               ))}
             </div>

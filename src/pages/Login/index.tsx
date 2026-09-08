@@ -5,8 +5,10 @@ import { AuthFooter } from '../../components/AuthFooter';
 import { useLogin } from '../../hooks/useLogin';
 import { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export function Login() {
+  const { t } = useTranslation();
   const { mutate: login, isPending } = useLogin();
   const navigate = useNavigate();
 
@@ -39,17 +41,17 @@ export function Login() {
         <div className="max-w-lg min-w-96 w-full bg-white p-10 rounded-3xl shadow-xl border border-slate-100">
           <header className="text-center mb-8">
             <h1 className="text-3xl font-black text-slate-900 tracking-tighter">
-              Entrar
+              {t('login.title')}
             </h1>
             <p className="text-slate-500 text-sm mt-2">
-              Bem-vindo de volta ao Centavo.
+              {t('login.subtitle')}
             </p>
           </header>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
               <label className="block text-xs font-bold text-slate-700 uppercase mb-1 ml-1">
-                E-mail
+                {t('login.email')}
               </label>
               <input
                 type="email"
@@ -60,7 +62,7 @@ export function Login() {
 
             <div>
               <label className="block text-xs font-bold text-slate-700 uppercase mb-1 ml-1">
-                Senha
+                {t('login.password')}
               </label>
               <div className="relative">
                 <input
@@ -82,17 +84,17 @@ export function Login() {
               disabled={isPending}
               className="w-full bg-slate-900 text-white p-4 rounded-2xl font-black hover:bg-slate-800 transition-all shadow-lg shadow-slate-200 disabled:opacity-50 mt-4"
             >
-              {isPending ? 'ENTRANDO...' : 'ENTRAR'}
+              {isPending ? t('login.submitting') : t('login.submit')}
             </button>
           </form>
 
           <p className="text-center text-sm text-slate-500 mt-6">
-            Não tem conta?{' '}
+            {t('login.noAccount')}{' '}
             <Link
               to="/register"
               className="text-indigo-600 font-bold hover:underline"
             >
-              Criar conta
+              {t('login.createAccount')}
             </Link>
           </p>
         </div>
