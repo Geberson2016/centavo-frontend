@@ -9,11 +9,7 @@ import { useAccountSummary } from '../../hooks/useAccountSummary';
 import { useRecentTransactions } from '../../hooks/useRecentTransactions';
 
 export function Dashboard() {
-  const {
-    data: summary,
-    isLoading: isSummaryLoading,
-    isError: isSummaryError,
-  } = useSummary();
+  const { data: summary } = useSummary();
   const {
     data: transactions = [],
     isLoading: isTransactionsLoading,

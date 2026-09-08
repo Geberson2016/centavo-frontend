@@ -5,7 +5,6 @@ import {
   Wallet,
   Tags,
   Users,
-  ChevronDown,
   LogOut,
 } from 'lucide-react';
 import logoImg from '../../assets/logo.svg';
