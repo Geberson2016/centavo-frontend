@@ -6,9 +6,11 @@ import { useLogin } from '../../hooks/useLogin';
 import { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useApiErrorToast } from '../../hooks/useApiErrorToast';
 
 export function Login() {
   const { t } = useTranslation();
+  const showApiError = useApiErrorToast();
   const { mutate: login, isPending } = useLogin();
   const navigate = useNavigate();
 
@@ -29,8 +31,8 @@ export function Login() {
         );
         navigate('/dashboard');
       },
-      onError: () => {
-        alert('E-mail ou senha inválidos.');
+      onError: (error) => {
+        showApiError(error, 'errors.INVALID_CREDENTIALS');
       },
     });
   };

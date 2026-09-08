@@ -6,6 +6,7 @@ import {
 } from '../../hooks/useCreateCategory';
 import { useAuth } from '../../hooks/useAuth';
 import { useTranslation } from 'react-i18next';
+import { useApiErrorToast } from '../../hooks/useApiErrorToast';
 
 interface CategoryFormData {
   name: string;
@@ -20,6 +21,7 @@ const BUDGET_TYPES: BudgetType[] = ['FIXED', 'VARIABLE'];
 
 export function Categories() {
   const { t } = useTranslation();
+  const showApiError = useApiErrorToast();
   const { user } = useAuth();
   const { mutate: createCategory, isPending } = useCreateCategory();
 
@@ -40,8 +42,8 @@ export function Categories() {
       onSuccess: () => {
         resetField('name');
       },
-      onError: (err: any) => {
-        alert(err.response?.data?.message || 'Erro ao criar categoria');
+      onError: (error) => {
+        showApiError(error, 'errors.createCategory');
       },
     });
   };

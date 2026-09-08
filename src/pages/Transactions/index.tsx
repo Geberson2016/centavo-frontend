@@ -6,6 +6,7 @@ import { BankIcon } from '../../components/BankIcon';
 import { Link } from 'react-router-dom';
 import { Plus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useApiErrorToast } from '../../hooks/useApiErrorToast';
 
 interface TransactionFormData {
   description: string;
@@ -18,6 +19,7 @@ interface TransactionFormData {
 
 export function Transactions() {
   const { t } = useTranslation();
+  const showApiError = useApiErrorToast();
   const { data: accounts } = useAccounts();
   const { data: categories } = useCategories();
   const { mutate: createTransaction, isPending } = useCreateTransaction();
@@ -47,8 +49,8 @@ export function Transactions() {
       onSuccess: () => {
         resetField('description');
       },
-      onError: (err: any) => {
-        alert(err.response?.data?.message || 'Erro ao criar transação');
+      onError: (error) => {
+        showApiError(error, 'errors.createTransaction');
       },
     });
   };

@@ -125,5 +125,20 @@
       "FIXED": "Fixed",
       "VARIABLE": "Variable"
     }
+  },
+  "errors": {
+    "GENERIC": "Something went wrong. Please try again.",
+    "ACCOUNT_NOT_FOUND": "Account not found.",
+    "CATEGORY_NOT_FOUND": "Category not found.",
+    "TRANSACTION_NOT_FOUND": "Transaction not found.",
+    "EMAIL_ALREADY_EXISTS": "This e-mail is already registered.",
+    "TRANSACTION_CATEGORY_TYPE_MISMATCH": "The selected category does not match the transaction type.",
+    "INVALID_CREDENTIALS": "Invalid e-mail or password.",
+    "VALIDATION_ERROR": "Please check the information provided.",
+    "INTERNAL_ERROR": "Internal server error. Please try again later.",
+    "createAccount": "Could not create the account.",
+    "createCategory": "Could not create the category.",
+    "createTransaction": "Could not create the transaction.",
+    "createUser": "Could not complete the sign up."
   }
 }

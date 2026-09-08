@@ -23,7 +23,14 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    // 401 numa rota autenticada = sessao expirada, entao derruba para o login.
+    // Em /users/login o 401 e a propria credencial invalida: redirecionar ali
+    // recarregaria a pagina e engoliria o aviso antes de o usuario ler.
+    const isPublic = PUBLIC_ROUTES.some((route) =>
+      error.config?.url?.includes(route)
+    );
+
+    if (error.response?.status === 401 && !isPublic) {
       clearAuth();
       window.location.href = '/login';
     }

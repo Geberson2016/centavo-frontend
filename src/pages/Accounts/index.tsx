@@ -5,6 +5,7 @@ import {
 } from '../../hooks/useCreateAccount';
 import { useAuth } from '../../hooks/useAuth';
 import { useTranslation } from 'react-i18next';
+import { useApiErrorToast } from '../../hooks/useApiErrorToast';
 
 interface AccountFormData {
   name: string;
@@ -23,6 +24,7 @@ const ACCOUNT_TYPES: AccountType[] = [
 
 export function Accounts() {
   const { t } = useTranslation();
+  const showApiError = useApiErrorToast();
   const { user } = useAuth();
 
   const { mutate: createAccount, isPending } = useCreateAccount();
@@ -42,8 +44,8 @@ export function Accounts() {
       onSuccess: () => {
         resetField('name');
       },
-      onError: (err: any) => {
-        alert(err.response?.data?.message || 'Erro ao criar conta');
+      onError: (error) => {
+        showApiError(error, 'errors.createAccount');
       },
     });
   };

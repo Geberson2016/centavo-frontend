@@ -125,5 +125,20 @@
       "FIXED": "Fixo",
       "VARIABLE": "Variável"
     }
+  },
+  "errors": {
+    "GENERIC": "Algo deu errado. Tente novamente.",
+    "ACCOUNT_NOT_FOUND": "Conta não encontrada.",
+    "CATEGORY_NOT_FOUND": "Categoria não encontrada.",
+    "TRANSACTION_NOT_FOUND": "Transação não encontrada.",
+    "EMAIL_ALREADY_EXISTS": "Este e-mail já está cadastrado.",
+    "TRANSACTION_CATEGORY_TYPE_MISMATCH": "A categoria escolhida não corresponde ao tipo da transação.",
+    "INVALID_CREDENTIALS": "E-mail ou senha inválidos.",
+    "VALIDATION_ERROR": "Verifique os dados informados.",
+    "INTERNAL_ERROR": "Erro interno do servidor. Tente novamente mais tarde.",
+    "createAccount": "Não foi possível criar a conta.",
+    "createCategory": "Não foi possível criar a categoria.",
+    "createTransaction": "Não foi possível criar a transação.",
+    "createUser": "Não foi possível concluir o cadastro."
   }
 }
