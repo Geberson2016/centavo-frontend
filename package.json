@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "api:generate": "openapi-typescript ${OPENAPI_SPEC:-../centavo-backend/src/main/resources/openapi.yaml} -o src/api/schema.ts --enum-values --export-type",
+    "api:check": "npm run api:generate && git diff --exit-code -- src/api/schema.ts"
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.2.2",
@@ -33,6 +35,7 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.4.0",
+    "openapi-typescript": "^7.13.0",
     "postcss": "^8.5.9",
     "prettier": "^3.8.3",
     "tailwindcss": "^4.2.2",
@@ -40,5 +43,10 @@
     "typescript-eslint": "^8.58.0",
     "vite": "^8.0.4",
     "vite-plugin-svgr": "^5.2.0"
+  },
+  "overrides": {
+    "openapi-typescript": {
+      "typescript": "$typescript"
+    }
   }
 }

@@ -25,6 +25,8 @@ npm run dev      # servidor de dev do Vite com HMR
 npm run build    # tsc -b (typecheck) e depois vite build
 npm run lint     # eslint no repo inteiro
 npm run preview  # serve o build de produção
+npm run api:generate  # regenera src/api/schema.ts a partir do openapi.yaml do backend
+npm run api:check     # regenera e falha se o schema.ts versionado estiver desatualizado
 ```
 
 Ainda não há test runner configurado (Vitest + React Testing Library estão no roadmap do `AGENTS.md`).
@@ -32,6 +34,7 @@ Ainda não há test runner configurado (Vitest + React Testing Library estão no
 ## Arquitetura (atual)
 
 - **Camada de dados** — TanStack Query + uma instância axios compartilhada em `src/services/api.ts`. Seus dois interceptors são a única fonte do comportamento de auth: o de request anexa `Authorization: Bearer <token>` do `localStorage` em toda rota exceto as `PUBLIC_ROUTES` (`/users/login`, `/users/register`); o de response, em `401`, chama `clearAuth()` e redireciona (hard) para `/login`.
+- **Tipos da API** — gerados pelo `openapi-typescript` a partir de `../centavo-backend/src/main/resources/openapi.yaml` (outro caminho via env `OPENAPI_SPEC`) em `src/api/schema.ts`, que é versionado e **nunca editado à mão**. A UI importa de `src/api/types.ts`, que dá nomes curtos aos schemas (`AccountResponse`, `TransactionRequest`…) e reexporta os arrays dos enums (`accountTypeValues`, `errorCodeValues`…). Mudou o contrato no backend? Rode `npm run api:generate` e commite o `schema.ts` junto.
 - **Um hook por endpoint** — cada arquivo em `src/hooks/` embrulha um único `useQuery` (leitura) ou `useMutation` (escrita). Mutations invalidam as query keys relacionadas (`useCreateTransaction` → `['dashboard-summary']`). Adicione features como hooks; nunca chame `api` dos componentes.
 - **Auth** — baseada em localStorage, sem context. `useAuth()` lê `user`; `src/utils/auth.ts` tem `isTokenValid()` (decodifica o `exp` do JWT) e `clearAuth()`. O login grava `token`/`user` no `localStorage` em `pages/Login/index.tsx`.
 - **Roteamento** — `src/App.tsx`. `/login` + `/register` públicas; o resto aninhado sob `<PrivateRoute>` → `<AppLayout>` (`Sidebar` + `<Outlet>`).

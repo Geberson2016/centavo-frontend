@@ -1,20 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../services/api';
-
-interface AccountSummary {
-  accountId: number;
-  accountName: string;
-  accountType: string;
-  totalRevenue: number;
-  totalExpense: number;
-}
+import type { AccountSummaryResponse } from '../api/types';
 
 export function useAccountSummary() {
-  return useQuery<AccountSummary[]>({
+  return useQuery({
     queryKey: ['accountSummary'],
     queryFn: async () => {
-      const response = await api.get('/accounts/accountSummary');
-      return response.data;
+      const { data } = await api.get<AccountSummaryResponse[]>(
+        '/accounts/accountSummary'
+      );
+      return data;
     },
   });
 }

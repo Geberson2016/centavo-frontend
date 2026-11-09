@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import { TrendingUp, TrendingDown } from 'lucide-react';
-import type { RecentTransaction } from '../../hooks/useRecentTransactions';
+import type { RecentTransactionResponse } from '../../api/types';
 
 interface TransactionsTableProps {
-  transactions: RecentTransaction[];
+  transactions: RecentTransactionResponse[];
   isLoading?: boolean;
   isError?: boolean;
 }

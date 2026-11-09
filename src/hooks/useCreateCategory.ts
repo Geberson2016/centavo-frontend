@@ -1,25 +1,20 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { api } from "../services/api";
-
-export type TransactionType = "INCOME" | "EXPENSE";
-export type BudgetType = "FIXED" | "VARIABLE";
-
-interface CategoryRequest {
-  name: string;
-  type: TransactionType;
-  userId: number;
-  budgetType: BudgetType;
-}
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { api } from '../services/api';
+import type { CategoryRequest, CategoryResponse } from '../api/types';
 
 export function useCreateCategory() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (newCategory: CategoryRequest) => {
-      return api.post("/categories", newCategory);
+      const { data } = await api.post<CategoryResponse>(
+        '/categories',
+        newCategory
+      );
+      return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["categories"] });
+      queryClient.invalidateQueries({ queryKey: ['categories'] });
     },
   });
 }

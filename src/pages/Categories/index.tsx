@@ -1,28 +1,20 @@
 import { useForm } from 'react-hook-form';
+import { useCreateCategory } from '../../hooks/useCreateCategory';
 import {
-  useCreateCategory,
-  type TransactionType,
-  type BudgetType,
-} from '../../hooks/useCreateCategory';
-import { useAuth } from '../../hooks/useAuth';
+  budgetTypeValues,
+  transactionTypeValues,
+  type CategoryRequest,
+} from '../../api/types';
 import { useTranslation } from 'react-i18next';
 import { useApiErrorToast } from '../../hooks/useApiErrorToast';
 
-interface CategoryFormData {
-  name: string;
-  type: TransactionType;
-  userId: number;
-  budgetType: BudgetType;
-}
-
-const TRANSACTION_TYPES: TransactionType[] = ['INCOME', 'EXPENSE'];
-const BUDGET_TYPES: BudgetType[] = ['FIXED', 'VARIABLE'];
+// O dono da categoria é o usuário autenticado (o backend ignora userId).
+type CategoryFormData = Omit<CategoryRequest, 'userId'>;
 
 
 export function Categories() {
   const { t } = useTranslation();
   const showApiError = useApiErrorToast();
-  const { user } = useAuth();
   const { mutate: createCategory, isPending } = useCreateCategory();
 
   const { register, handleSubmit, resetField, watch } =
@@ -30,7 +22,6 @@ export function Categories() {
       defaultValues: {
         type: 'EXPENSE',
         budgetType: 'FIXED',
-        userId: user?.id,
       },
     });
 
@@ -77,7 +68,7 @@ export function Categories() {
                 {t('categories.type')}
               </label>
               <div className="flex gap-3">
-                {TRANSACTION_TYPES.map((type) => (
+                {transactionTypeValues.map((type) => (
                   <label
                     key={type}
                     className={`flex-1 p-3 rounded-xl border-2 cursor-pointer transition-all text-center text-xs font-black ${
@@ -104,7 +95,7 @@ export function Categories() {
                 {t('categories.budget')}
               </label>
               <div className="flex gap-3">
-                {BUDGET_TYPES.map((bType) => (
+                {budgetTypeValues.map((bType) => (
                   <label
                     key={bType}
                     className={`flex-1 p-3 rounded-xl border-2 cursor-pointer transition-all text-center text-xs font-black ${

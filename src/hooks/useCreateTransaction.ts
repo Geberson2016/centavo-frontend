@@ -1,21 +1,17 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '../services/api';
-
-interface TransactionRequest {
-  description: string;
-  value: number;
-  date: string;
-  accountId: number;
-  categoryId: number;
-  type: 'INCOME' | 'EXPENSE';
-}
+import type { TransactionRequest, TransactionResponse } from '../api/types';
 
 export function useCreateTransaction() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (newTransaction: TransactionRequest) => {
-      return api.post('/transactions', newTransaction);
+      const { data } = await api.post<TransactionResponse>(
+        '/transactions',
+        newTransaction
+      );
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['dashboard-summary'] });

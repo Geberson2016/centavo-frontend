@@ -1,17 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../services/api';
-
-export interface Account {
-  id: number;
-  name: string;
-  type: string;
-}
+import type { AccountResponse } from '../api/types';
 
 export function useAccounts() {
   return useQuery({
     queryKey: ['accounts'],
     queryFn: async () => {
-      const { data } = await api.get<Account[]>('/accounts');
+      const { data } = await api.get<AccountResponse[]>('/accounts');
       return data;
     },
   });

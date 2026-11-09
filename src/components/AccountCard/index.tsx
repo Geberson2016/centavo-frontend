@@ -1,15 +1,16 @@
 import { TrendingUp, TrendingDown, CreditCard, Wallet } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import type { AccountType } from '../../api/types';
 
 interface AccountCardProps {
   accountName: string;
-  accountType: string;
+  accountType: AccountType;
   totalRevenue: number;
   totalExpense: number;
 }
 
 const ACCOUNT_TYPE_CONFIG: Record<
-  string,
+  AccountType,
   { icon: React.ElementType; color: string; bg: string }
 > = {
   CREDIT_CARD: { icon: CreditCard, color: 'text-rose-500', bg: 'bg-rose-50' },

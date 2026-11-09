@@ -7,15 +7,9 @@ import { Link } from 'react-router-dom';
 import { Plus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useApiErrorToast } from '../../hooks/useApiErrorToast';
+import type { TransactionRequest } from '../../api/types';
 
-interface TransactionFormData {
-  description: string;
-  value: number;
-  date: string;
-  accountId: number;
-  categoryId: number;
-  type: 'INCOME' | 'EXPENSE';
-}
+type TransactionFormData = TransactionRequest;
 
 export function Transactions() {
   const { t } = useTranslation();

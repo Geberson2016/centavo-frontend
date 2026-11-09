@@ -1,23 +1,12 @@
 import { useMutation } from '@tanstack/react-query';
 import { api } from '../services/api';
-
-interface AuthRequest {
-  email: string;
-  password: string;
-}
-
-interface AuthResponse {
-  id: number;
-  name: string;
-  email: string;
-  token: string;
-}
+import type { AuthRequest, UserResponse } from '../api/types';
 
 export function useLogin() {
   return useMutation({
-    mutationFn: async (credentials: AuthRequest): Promise<AuthResponse> => {
-      const response = await api.post('/users/login', credentials);
-      return response.data;
+    mutationFn: async (credentials: AuthRequest) => {
+      const { data } = await api.post<UserResponse>('/users/login', credentials);
+      return data;
     },
   });
 }

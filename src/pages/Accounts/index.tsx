@@ -1,31 +1,16 @@
 import { useForm } from 'react-hook-form';
-import {
-  useCreateAccount,
-  type AccountType,
-} from '../../hooks/useCreateAccount';
-import { useAuth } from '../../hooks/useAuth';
+import { useCreateAccount } from '../../hooks/useCreateAccount';
+import { accountTypeValues, type AccountRequest } from '../../api/types';
 import { useTranslation } from 'react-i18next';
 import { useApiErrorToast } from '../../hooks/useApiErrorToast';
 
-interface AccountFormData {
-  name: string;
-  type: AccountType;
-  userId: number;
-}
-
-const ACCOUNT_TYPES: AccountType[] = [
-  'CHECKING',
-  'SAVINGS',
-  'INVESTMENT',
-  'CASH',
-  'CREDIT_CARD',
-];
+// O dono da conta é o usuário autenticado (o backend ignora userId).
+type AccountFormData = Omit<AccountRequest, 'userId'>;
 
 
 export function Accounts() {
   const { t } = useTranslation();
   const showApiError = useApiErrorToast();
-  const { user } = useAuth();
 
   const { mutate: createAccount, isPending } = useCreateAccount();
 
@@ -33,7 +18,6 @@ export function Accounts() {
     useForm<AccountFormData>({
       defaultValues: {
         type: 'CHECKING',
-        userId: user?.id,
       },
     });
 
@@ -77,7 +61,7 @@ export function Accounts() {
               {t('accounts.type')}
             </label>
             <div className="grid grid-cols-2 gap-3">
-              {ACCOUNT_TYPES.map((type) => (
+              {accountTypeValues.map((type) => (
                 <label
                   key={type}
                   className={`p-3 rounded-xl border-2 cursor-pointer transition-all text-center text-xs font-black tracking-tighter ${

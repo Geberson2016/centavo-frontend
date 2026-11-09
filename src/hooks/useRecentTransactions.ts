@@ -1,20 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../services/api';
-
-export interface RecentTransaction {
-  description: string;
-  categoryName: string;
-  date: string;
-  value: number;
-  type: 'INCOME' | 'EXPENSE';
-}
+import type { RecentTransactionResponse } from '../api/types';
 
 export function useRecentTransactions() {
-  return useQuery<RecentTransaction[]>({
+  return useQuery({
     queryKey: ['recentTransactions'],
     queryFn: async () => {
-      const response = await api.get('/transactions/recent');
-      return response.data;
+      const { data } = await api.get<RecentTransactionResponse[]>(
+        '/transactions/recent'
+      );
+      return data;
     },
   });
 }
