@@ -2,7 +2,7 @@
 
 **Este arquivo é o regramento obrigatório deste repositório.** Todo código (escrito por humano ou agente) precisa cumpri-lo. O `CLAUDE.md` é o guia de operação do Claude Code e aponta para cá. Um `AGENTS.md` irmão, com as mesmas convenções compartilhadas, vive em `centavo-backend` — mantenha as seções compartilhadas sincronizadas.
 
-O Centavo é um app de finanças pessoais: **React (Vite) → BFF (Node/TS) → Spring Boot → Postgres**. Este repositório é a UI React e, daqui pra frente, o **BFF** (ver [Arquitetura-alvo](#arquitetura-alvo)).
+O Centavo é um app de finanças pessoais: **React (Vite) → BFF (Node/TS) → Spring Boot → Postgres**. Este repositório é a UI React. O **BFF** vive no repositório irmão `centavo-bff` (ver [Arquitetura-alvo](#arquitetura-alvo)).
 
 ---
 
@@ -67,7 +67,7 @@ Configuração vem do ambiente (`import.meta.env`, tipado). Forneça um `.env.ex
 
 ### Arquitetura-alvo
 ```
-React (Vite)  ──/bff──▶  BFF (Node/TS: Fastify | NestJS | Hono)  ──/api/v1──▶  Spring Boot  ──▶  Postgres
+React (Vite)  ──/bff──▶  BFF (Node/TS: Fastify, repo centavo-bff)  ──/api/v1──▶  Spring Boot  ──▶  Postgres
 ```
 - O app React chama **apenas o BFF**, nunca o Spring direto.
 - **Responsabilidades do BFF**: agregar/moldar view-models para as telas, guardar a sessão, cuidar da troca de token de auth, adaptar o contrato do Spring ao que a UI precisa. **Nenhuma regra de negócio** vive no BFF — o Spring é a fonte da verdade do domínio.
@@ -81,7 +81,7 @@ React (Vite)  ──/bff──▶  BFF (Node/TS: Fastify | NestJS | Hono)  ─�
 Agrupadas por prioridade. Nada aqui está construído ainda; são as direções aprovadas.
 
 **Fundações obrigatórias**
-- **Serviço BFF** (Fastify/NestJS/Hono) — novo pacote/repo; ver §2 arquitetura-alvo.
+- **Serviço BFF** — Fastify, no repositório `centavo-bff`; ver §2 arquitetura-alvo.
 - **OpenAPI contract-first** — escrever o `openapi.yaml`, gerar o client TS, apagar as interfaces feitas à mão.
 - **i18n** — `react-i18next`, bundles `pt-BR` + `en`, extrair todas as strings atuais.
 - **Endurecimento de auth** — sessão em cookie httpOnly via BFF; adicionar fluxo de refresh token; abandonar o token no localStorage.

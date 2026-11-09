@@ -16,7 +16,7 @@ O Definition of Done e a justificativa completa estão no `AGENTS.md`.
 
 ## Visão geral
 
-O Centavo é um app web de finanças pessoais. Topologia-alvo: **React (Vite) → BFF (Node/TS) → Spring Boot → Postgres**. Este repositório é a UI React (e, daqui pra frente, o BFF). O backend vive no repositório irmão `centavo-backend`. O texto da UI é português do Brasil (migrando para i18n).
+O Centavo é um app web de finanças pessoais. Topologia-alvo: **React (Vite) → BFF (Node/TS) → Spring Boot → Postgres**. Este repositório é a UI React. O BFF vive no repositório irmão `centavo-bff` (Fastify) e o backend no `centavo-backend`. O texto da UI é português do Brasil (migrando para i18n).
 
 ## Comandos
 
@@ -42,7 +42,7 @@ Ainda não há test runner configurado (Vitest + React Testing Library estão no
 
 ## Arquitetura-alvo (ver AGENTS.md §2)
 
-O React chama **apenas o BFF**, nunca o Spring direto. O BFF (Fastify/NestJS/Hono) molda view-models, guarda a sessão e move a auth para um **cookie httpOnly** (fora do `localStorage`). As regras de negócio ficam no Spring.
+O React chama **apenas o BFF**, nunca o Spring direto. O BFF (`centavo-bff`, Fastify) molda view-models, guarda a sessão e move a auth para um **cookie httpOnly** (fora do `localStorage`). As regras de negócio ficam no Spring.
 
 ## Convenções
 
