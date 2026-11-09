@@ -43,6 +43,8 @@
     "submitting": "PROCESSANDO..."
   },
   "dashboard": {
+    "showAllIndicators": "Ver todos os indicadores",
+    "showLessIndicators": "Ver menos",
     "title": "Painel",
     "addTransaction": "Nova transação",
     "myAccounts": "Minhas Contas",

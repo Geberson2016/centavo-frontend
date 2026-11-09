@@ -43,6 +43,8 @@
     "submitting": "PROCESSING..."
   },
   "dashboard": {
+    "showAllIndicators": "Show all indicators",
+    "showLessIndicators": "Show less",
     "title": "Dashboard",
     "addTransaction": "New transaction",
     "myAccounts": "My accounts",
