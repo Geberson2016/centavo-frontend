@@ -4,7 +4,7 @@
  */
 
 export type paths = {
-    "/api/v1/users/register": {
+    "/bff/users/register": {
         parameters: {
             query?: never;
             header?: never;
@@ -21,24 +21,34 @@ export type paths = {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/users/login": {
+    "/bff/session": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /**
+         * Usuário da sessão atual
+         * @description Usado pela UI para saber se há sessão (por exemplo, ao abrir o app).
+         */
+        get: operations["getSession"];
         put?: never;
-        /** Autentica o usuário e devolve o JWT */
+        /**
+         * Autentica o usuário e abre a sessão
+         * @description Troca as credenciais pelo JWT do Spring e devolve o cookie `centavo_session` com o
+         *     JWT cifrado. A sessão expira junto com o JWT (hoje, 1 dia). O token não aparece
+         *     no corpo da resposta.
+         */
         post: operations["login"];
-        delete?: never;
+        /** Encerra a sessão */
+        delete: operations["logout"];
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/api/v1/accounts": {
+    "/bff/accounts": {
         parameters: {
             query?: never;
             header?: never;
@@ -56,44 +66,7 @@ export type paths = {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/accounts/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Busca uma conta pelo id */
-        get: operations["getAccount"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/accounts/accountSummary": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Lista as contas com o total de receitas e despesas de cada uma
-         * @description Totais acumulados de todos os lançamentos da conta, sem filtro de período.
-         */
-        get: operations["getAccountSummary"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/categories": {
+    "/bff/categories": {
         parameters: {
             query?: never;
             header?: never;
@@ -111,37 +84,16 @@ export type paths = {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/categories/{id}": {
+    "/bff/transactions": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Busca uma categoria pelo id */
-        get: operations["getCategory"];
+        get?: never;
         put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/transactions": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Lista os lançamentos do usuário */
-        get: operations["listTransactions"];
-        put?: never;
-        /**
-         * Cria um lançamento
-         * @description O `type` do lançamento precisa ser igual ao `type` da categoria.
-         */
+        /** Cria um lançamento */
         post: operations["createTransaction"];
         delete?: never;
         options?: never;
@@ -149,49 +101,19 @@ export type paths = {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/transactions/{id}": {
+    "/bff/dashboard": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Busca um lançamento pelo id */
-        get: operations["getTransaction"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/transactions/recent": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Lista os lançamentos dos últimos 30 dias */
-        get: operations["listRecentTransactions"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/dashboard/summary": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Indicadores do mês corrente e saldo geral */
-        get: operations["getDashboardSummary"];
+        /**
+         * Tudo o que a tela inicial precisa, numa chamada
+         * @description Agrega, em paralelo, o resumo do mês, os lançamentos recentes e o resumo por conta.
+         *     Se qualquer uma das chamadas ao Spring falhar, devolve o erro dela.
+         */
+        get: operations["getDashboard"];
         put?: never;
         post?: never;
         delete?: never;
@@ -204,12 +126,38 @@ export type paths = {
 export type webhooks = Record<string, never>;
 export type components = {
     schemas: {
-        /** @enum {string} */
-        TransactionType: "INCOME" | "EXPENSE";
-        /** @enum {string} */
-        AccountType: "CHECKING" | "SAVINGS" | "INVESTMENT" | "CASH" | "CREDIT_CARD";
-        /** @enum {string} */
-        BudgetType: "FIXED" | "VARIABLE";
+        SessionUser: {
+            /** Format: int64 */
+            id: number;
+            name: string;
+            email: string;
+            /**
+             * Format: date-time
+             * @description Quando a sessão expira (o mesmo instante do JWT do Spring)
+             */
+            expiresAt: string;
+        };
+        DashboardView: {
+            summary: components["schemas"]["DashboardSummaryResponse"];
+            recentTransactions: components["schemas"]["RecentTransactionResponse"][];
+            accounts: components["schemas"]["AccountSummaryResponse"][];
+        };
+        /** @description Erro no formato RFC 7807 (`application/problem+json`) */
+        Problem: {
+            type?: string;
+            title?: string;
+            status: number;
+            /** @description Detalhe técnico opcional, para debug — não exibir ao usuário */
+            detail?: string;
+            instance?: string;
+            code: components["schemas"]["ErrorCode"];
+            errors?: components["schemas"]["FieldError"][];
+        };
+        /**
+         * @description Os códigos do Spring mais os do próprio BFF.
+         * @enum {string}
+         */
+        ErrorCode: "ACCOUNT_NOT_FOUND" | "CATEGORY_NOT_FOUND" | "TRANSACTION_NOT_FOUND" | "EMAIL_ALREADY_EXISTS" | "TRANSACTION_CATEGORY_TYPE_MISMATCH" | "INVALID_CREDENTIALS" | "VALIDATION_ERROR" | "INTERNAL_ERROR" | "UPSTREAM_UNAVAILABLE" | "UNAUTHENTICATED";
         UserRequest: {
             name: string;
             /** Format: email */
@@ -220,18 +168,28 @@ export type components = {
         UserRegisterResponse: {
             name: string;
         };
+        FieldError: {
+            /** @description Caminho do campo inválido no corpo */
+            field: string;
+            /** @description Mensagem do bean validation (apenas para debug) */
+            message?: string;
+            /** @description Valores aceitos, quando o campo é um enum com valor fora do domínio */
+            accepted?: string[];
+        };
         AuthRequest: {
             /** Format: email */
             email: string;
             password: string;
         };
-        UserResponse: {
+        /** @enum {string} */
+        AccountType: "CHECKING" | "SAVINGS" | "INVESTMENT" | "CASH" | "CREDIT_CARD";
+        AccountResponse: {
             /** Format: int64 */
             id: number;
             name: string;
-            email: string;
-            /** @description JWT a enviar como `Authorization: Bearer <token>` */
-            token: string;
+            type: components["schemas"]["AccountType"];
+            /** Format: int64 */
+            userId: number;
         };
         AccountRequest: {
             name: string;
@@ -243,23 +201,18 @@ export type components = {
              */
             userId?: number | null;
         };
-        AccountResponse: {
+        /** @enum {string} */
+        TransactionType: "INCOME" | "EXPENSE";
+        /** @enum {string} */
+        BudgetType: "FIXED" | "VARIABLE";
+        CategoryResponse: {
             /** Format: int64 */
             id: number;
             name: string;
-            type: components["schemas"]["AccountType"];
+            type: components["schemas"]["TransactionType"];
             /** Format: int64 */
             userId: number;
-        };
-        AccountSummaryResponse: {
-            /** Format: int64 */
-            accountId: number;
-            accountName: string;
-            accountType: components["schemas"]["AccountType"];
-            /** @description Soma dos lançamentos INCOME da conta */
-            totalRevenue: number;
-            /** @description Soma dos lançamentos EXPENSE da conta */
-            totalExpense: number;
+            budgetType: components["schemas"]["BudgetType"];
         };
         CategoryRequest: {
             name: string;
@@ -270,15 +223,6 @@ export type components = {
              * @description Ignorado — o dono da categoria é sempre o usuário autenticado.
              */
             userId?: number | null;
-            budgetType: components["schemas"]["BudgetType"];
-        };
-        CategoryResponse: {
-            /** Format: int64 */
-            id: number;
-            name: string;
-            type: components["schemas"]["TransactionType"];
-            /** Format: int64 */
-            userId: number;
             budgetType: components["schemas"]["BudgetType"];
         };
         TransactionRequest: {
@@ -309,14 +253,6 @@ export type components = {
             /** Format: int64 */
             categoryId: number;
         };
-        RecentTransactionResponse: {
-            description: string;
-            categoryName: string;
-            /** Format: date */
-            date: string;
-            value: number;
-            type: components["schemas"]["TransactionType"];
-        };
         DashboardSummaryResponse: {
             /** @description Receitas menos despesas de todos os lançamentos, sem filtro de período */
             totalBalance: number;
@@ -333,31 +269,35 @@ export type components = {
             /** @description Despesas com data após o fim do mês corrente */
             scheduledExpense: number;
         };
-        /** @description Erro no formato RFC 7807 (`application/problem+json`) */
-        Problem: {
-            /** @example about:blank */
-            type?: string;
-            title?: string;
-            status: number;
-            /** @description Detalhe técnico opcional, para debug — não exibir ao usuário */
-            detail?: string;
-            instance?: string;
-            code: components["schemas"]["ErrorCode"];
-            /** @description Presente só em `VALIDATION_ERROR` */
-            errors?: components["schemas"]["FieldError"][];
+        RecentTransactionResponse: {
+            description: string;
+            categoryName: string;
+            /** Format: date */
+            date: string;
+            value: number;
+            type: components["schemas"]["TransactionType"];
         };
-        FieldError: {
-            /** @description Caminho do campo inválido no corpo */
-            field: string;
-            /** @description Mensagem do bean validation (apenas para debug) */
-            message?: string;
-            /** @description Valores aceitos, quando o campo é um enum com valor fora do domínio */
-            accepted?: string[];
+        AccountSummaryResponse: {
+            /** Format: int64 */
+            accountId: number;
+            accountName: string;
+            accountType: components["schemas"]["AccountType"];
+            /** @description Soma dos lançamentos INCOME da conta */
+            totalRevenue: number;
+            /** @description Soma dos lançamentos EXPENSE da conta */
+            totalExpense: number;
         };
-        /** @enum {string} */
-        ErrorCode: "ACCOUNT_NOT_FOUND" | "CATEGORY_NOT_FOUND" | "TRANSACTION_NOT_FOUND" | "EMAIL_ALREADY_EXISTS" | "TRANSACTION_CATEGORY_TYPE_MISMATCH" | "INVALID_CREDENTIALS" | "VALIDATION_ERROR" | "INTERNAL_ERROR";
     };
     responses: {
+        /** @description Erro de domínio repassado do Spring (ver o `code`) */
+        Problem: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/problem+json": components["schemas"]["Problem"];
+            };
+        };
         /** @description Corpo inválido ou ilegível (`VALIDATION_ERROR`) */
         ValidationError: {
             headers: {
@@ -367,17 +307,26 @@ export type components = {
                 "application/problem+json": components["schemas"]["Problem"];
             };
         };
-        /** @description Token ausente, inválido ou expirado (sem corpo) */
-        Forbidden: {
+        /** @description Sem sessão, sessão expirada ou recusada pelo Spring (`UNAUTHENTICATED`) */
+        Unauthenticated: {
             headers: {
                 [name: string]: unknown;
             };
-            content?: never;
+            content: {
+                "application/problem+json": components["schemas"]["Problem"];
+            };
+        };
+        /** @description O Spring não respondeu a tempo ou está fora do ar (`UPSTREAM_UNAVAILABLE`) */
+        UpstreamUnavailable: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/problem+json": components["schemas"]["Problem"];
+            };
         };
     };
-    parameters: {
-        Id: number;
-    };
+    parameters: never;
     requestBodies: never;
     headers: never;
     pathItems: never;
@@ -407,15 +356,29 @@ export interface operations {
                 };
             };
             400: components["responses"]["ValidationError"];
-            /** @description E-mail já cadastrado (`EMAIL_ALREADY_EXISTS`) */
-            409: {
+            409: components["responses"]["Problem"];
+            502: components["responses"]["UpstreamUnavailable"];
+        };
+    };
+    getSession: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Sessão válida */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": components["schemas"]["Problem"];
+                    "application/json": components["schemas"]["SessionUser"];
                 };
             };
+            401: components["responses"]["Unauthenticated"];
         };
     };
     login: {
@@ -431,13 +394,15 @@ export interface operations {
             };
         };
         responses: {
-            /** @description Autenticado */
+            /** @description Sessão aberta */
             200: {
                 headers: {
+                    /** @description `centavo_session`, httpOnly, SameSite=Lax */
+                    "Set-Cookie"?: string;
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["UserResponse"];
+                    "application/json": components["schemas"]["SessionUser"];
                 };
             };
             400: components["responses"]["ValidationError"];
@@ -449,6 +414,25 @@ export interface operations {
                 content: {
                     "application/problem+json": components["schemas"]["Problem"];
                 };
+            };
+            502: components["responses"]["UpstreamUnavailable"];
+        };
+    };
+    logout: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Sessão encerrada (cookie removido). Idempotente. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };
@@ -470,7 +454,8 @@ export interface operations {
                     "application/json": components["schemas"]["AccountResponse"][];
                 };
             };
-            403: components["responses"]["Forbidden"];
+            401: components["responses"]["Unauthenticated"];
+            502: components["responses"]["UpstreamUnavailable"];
         };
     };
     createAccount: {
@@ -496,60 +481,8 @@ export interface operations {
                 };
             };
             400: components["responses"]["ValidationError"];
-            403: components["responses"]["Forbidden"];
-        };
-    };
-    getAccount: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: components["parameters"]["Id"];
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Conta encontrada */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AccountResponse"];
-                };
-            };
-            403: components["responses"]["Forbidden"];
-            /** @description Conta inexistente ou de outro usuário (`ACCOUNT_NOT_FOUND`) */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["Problem"];
-                };
-            };
-        };
-    };
-    getAccountSummary: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Resumo por conta */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AccountSummaryResponse"][];
-                };
-            };
-            403: components["responses"]["Forbidden"];
+            401: components["responses"]["Unauthenticated"];
+            502: components["responses"]["UpstreamUnavailable"];
         };
     };
     listCategories: {
@@ -570,7 +503,8 @@ export interface operations {
                     "application/json": components["schemas"]["CategoryResponse"][];
                 };
             };
-            403: components["responses"]["Forbidden"];
+            401: components["responses"]["Unauthenticated"];
+            502: components["responses"]["UpstreamUnavailable"];
         };
     };
     createCategory: {
@@ -596,60 +530,8 @@ export interface operations {
                 };
             };
             400: components["responses"]["ValidationError"];
-            403: components["responses"]["Forbidden"];
-        };
-    };
-    getCategory: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: components["parameters"]["Id"];
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Categoria encontrada */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CategoryResponse"];
-                };
-            };
-            403: components["responses"]["Forbidden"];
-            /** @description Categoria inexistente ou de outro usuário (`CATEGORY_NOT_FOUND`) */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["Problem"];
-                };
-            };
-        };
-    };
-    listTransactions: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Lançamentos do usuário */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TransactionResponse"][];
-                };
-            };
-            403: components["responses"]["Forbidden"];
+            401: components["responses"]["Unauthenticated"];
+            502: components["responses"]["UpstreamUnavailable"];
         };
     };
     createTransaction: {
@@ -675,60 +557,13 @@ export interface operations {
                 };
             };
             400: components["responses"]["ValidationError"];
-            403: components["responses"]["Forbidden"];
-            /** @description Conta ou categoria inexistente ou de outro usuário (`ACCOUNT_NOT_FOUND`, `CATEGORY_NOT_FOUND`) */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["Problem"];
-                };
-            };
-            /** @description Tipo do lançamento difere do tipo da categoria (`TRANSACTION_CATEGORY_TYPE_MISMATCH`) */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["Problem"];
-                };
-            };
+            401: components["responses"]["Unauthenticated"];
+            404: components["responses"]["Problem"];
+            422: components["responses"]["Problem"];
+            502: components["responses"]["UpstreamUnavailable"];
         };
     };
-    getTransaction: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: components["parameters"]["Id"];
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Lançamento encontrado */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TransactionResponse"];
-                };
-            };
-            403: components["responses"]["Forbidden"];
-            /** @description Lançamento inexistente ou de outro usuário (`TRANSACTION_NOT_FOUND`) */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["Problem"];
-                };
-            };
-        };
-    };
-    listRecentTransactions: {
+    getDashboard: {
         parameters: {
             query?: never;
             header?: never;
@@ -737,37 +572,17 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Lançamentos recentes, do mais novo para o mais antigo */
+            /** @description View-model do dashboard */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["RecentTransactionResponse"][];
+                    "application/json": components["schemas"]["DashboardView"];
                 };
             };
-            403: components["responses"]["Forbidden"];
-        };
-    };
-    getDashboardSummary: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Indicadores do dashboard */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["DashboardSummaryResponse"];
-                };
-            };
-            403: components["responses"]["Forbidden"];
+            401: components["responses"]["Unauthenticated"];
+            502: components["responses"]["UpstreamUnavailable"];
         };
     };
 }
@@ -779,7 +594,7 @@ type ReadonlyArray<T> = [
 ] extends [
     unknown[]
 ] ? Readonly<Exclude<T, undefined>> : Readonly<Exclude<T, undefined>[]>;
-export const transactionTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["TransactionType"]> = ["INCOME", "EXPENSE"];
+export const errorCodeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ErrorCode"]> = ["ACCOUNT_NOT_FOUND", "CATEGORY_NOT_FOUND", "TRANSACTION_NOT_FOUND", "EMAIL_ALREADY_EXISTS", "TRANSACTION_CATEGORY_TYPE_MISMATCH", "INVALID_CREDENTIALS", "VALIDATION_ERROR", "INTERNAL_ERROR", "UPSTREAM_UNAVAILABLE", "UNAUTHENTICATED"];
 export const accountTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["AccountType"]> = ["CHECKING", "SAVINGS", "INVESTMENT", "CASH", "CREDIT_CARD"];
+export const transactionTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["TransactionType"]> = ["INCOME", "EXPENSE"];
 export const budgetTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["BudgetType"]> = ["FIXED", "VARIABLE"];
-export const errorCodeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ErrorCode"]> = ["ACCOUNT_NOT_FOUND", "CATEGORY_NOT_FOUND", "TRANSACTION_NOT_FOUND", "EMAIL_ALREADY_EXISTS", "TRANSACTION_CATEGORY_TYPE_MISMATCH", "INVALID_CREDENTIALS", "VALIDATION_ERROR", "INTERNAL_ERROR"];

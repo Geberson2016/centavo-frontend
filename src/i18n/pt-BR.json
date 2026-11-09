@@ -144,6 +144,8 @@
     "INVALID_CREDENTIALS": "E-mail ou senha inválidos.",
     "VALIDATION_ERROR": "Verifique os dados informados.",
     "INTERNAL_ERROR": "Erro interno do servidor. Tente novamente mais tarde.",
+    "UPSTREAM_UNAVAILABLE": "Serviço indisponível no momento. Tente novamente em instantes.",
+    "UNAUTHENTICATED": "Sua sessão expirou. Entre novamente.",
     "createAccount": "Não foi possível criar a conta.",
     "createCategory": "Não foi possível criar a categoria.",
     "createTransaction": "Não foi possível criar a transação.",

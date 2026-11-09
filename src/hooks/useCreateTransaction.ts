@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '../services/api';
 import type { TransactionRequest, TransactionResponse } from '../api/types';
+import { DASHBOARD_QUERY_KEY } from './useDashboard';
 
 export function useCreateTransaction() {
   const queryClient = useQueryClient();
@@ -14,7 +15,7 @@ export function useCreateTransaction() {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['dashboard-summary'] });
+      queryClient.invalidateQueries({ queryKey: DASHBOARD_QUERY_KEY });
     },
   });
 }

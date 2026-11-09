@@ -8,8 +8,8 @@ import {
   LogOut,
 } from 'lucide-react';
 import logoImg from '../../assets/logo.svg';
-import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../../hooks/useAuth';
+import { useLogout } from '../../hooks/useLogout';
 import { useTranslation } from 'react-i18next';
 import { LanguageSwitcher } from '../../components/LanguageSwitcher';
 
@@ -17,13 +17,10 @@ export function Sidebar() {
   const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
+  const { mutate: logout } = useLogout();
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    queryClient.clear();
-    navigate('/login');
+    logout(undefined, { onSettled: () => navigate('/login') });
   };
 
   const { user } = useAuth();

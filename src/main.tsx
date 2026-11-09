@@ -10,6 +10,15 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 const queryClient = new QueryClient()
 
+// Limpeza única: antes do BFF o JWT ficava no localStorage. Agora a sessão é um
+// cookie httpOnly; o token antigo não deve ficar exposto no browser.
+try {
+  localStorage.removeItem('token')
+  localStorage.removeItem('user')
+} catch {
+  // localStorage indisponível (modo privativo, cookies bloqueados).
+}
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <I18nextProvider i18n={i18n}>

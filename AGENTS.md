@@ -58,10 +58,10 @@ Configuração vem do ambiente (`import.meta.env`, tipado). Forneça um `.env.ex
 ## 2. Arquitetura & convenções do frontend
 
 ### Estado atual (como está construído)
-- **Roteamento** — `src/App.tsx`; `/login`, `/register` públicas; o resto aninhado sob `<PrivateRoute>` (protege via `isTokenValid()`) → `<AppLayout>` (`Sidebar` fixa + `<Outlet>`).
-- **Camada de dados** — TanStack Query. Todo acesso ao servidor passa pela instância axios compartilhada em `src/services/api.ts`, cujos interceptors são a única fonte do comportamento de auth (token Bearer do `localStorage`; em `401` → `clearAuth()` + redirect para `/login`).
-- **Hooks** — um arquivo por endpoint em `src/hooks/`, embrulhando um único `useQuery`/`useMutation`. Mutations invalidam as query keys relacionadas (ex.: `useCreateTransaction` invalida `['dashboard-summary']`). Adicione features aqui, nunca chame `api` direto dos componentes.
-- **Auth** — baseada em localStorage, sem context. `useAuth()` lê `user`; `src/utils/auth.ts` tem `isTokenValid()` (decodifica o `exp` do JWT) e `clearAuth()`.
+- **Roteamento** — `src/App.tsx`; `/login`, `/register` públicas; o resto aninhado sob `<PrivateRoute>` (protege via `useSession()`, ou seja, `GET /bff/session`) → `<AppLayout>` (`Sidebar` fixa + `<Outlet>`).
+- **Camada de dados** — TanStack Query + uma instância axios compartilhada em `src/services/api.ts` com `baseURL: '/bff'`. A UI fala **só com o BFF** (`centavo-bff`), na mesma origem: o Vite faz proxy de `/bff` para `BFF_URL` (padrão `http://localhost:3000`, ver `.env.example`). Não há token no JS: a sessão é um cookie httpOnly que o browser manda sozinho. O interceptor de resposta, em `401` fora das rotas de auth (`/session`, `/users/register`), redireciona (hard) para `/login`.
+- **Hooks** — um arquivo por endpoint em `src/hooks/`, embrulhando um único `useQuery`/`useMutation`. Mutations invalidam as query keys relacionadas (ex.: `useCreateTransaction` invalida `['dashboard']`). Adicione features aqui, nunca chame `api` direto dos componentes.
+- **Auth** — sessão do BFF em cookie httpOnly (nada no `localStorage`). `useSession()` (`GET /bff/session`) é a fonte de verdade de "está logado"; `useAuth()` devolve o `user` dela. `useLogin()` (`POST /bff/session`) já popula a query da sessão; `useLogout()` (`DELETE /bff/session`) limpa o cache. O `<PrivateRoute>` manda para `/login` só em 401; com o BFF fora do ar, mostra erro em vez de deslogar.
 - **Estrutura** — cada componente/página/layout é uma pasta com um `index.tsx`.
 - **Estilo** — classes utilitárias do Tailwind v4 inline. **Formulários** — react-hook-form. **Ícones** — lucide-react (SVGs viram componentes via `vite-plugin-svgr`).
 
@@ -72,7 +72,7 @@ React (Vite)  ──/bff──▶  BFF (Node/TS: Fastify, repo centavo-bff)  ─
 - O app React chama **apenas o BFF**, nunca o Spring direto.
 - **Responsabilidades do BFF**: agregar/moldar view-models para as telas, guardar a sessão, cuidar da troca de token de auth, adaptar o contrato do Spring ao que a UI precisa. **Nenhuma regra de negócio** vive no BFF — o Spring é a fonte da verdade do domínio.
 - Ambos os saltos (`FE↔BFF`, `BFF↔Spring`) são descritos pelo `openapi.yaml` e usam clients gerados.
-- **Migração de auth**: tirar o JWT do `localStorage` (exposto a XSS) para uma **sessão em cookie httpOnly, Secure, gerenciada pelo BFF**. O `utils/auth.ts` / o interceptor de resposta mudam de acordo.
+- **Auth**: o JWT saiu do `localStorage` (exposto a XSS). A sessão é um **cookie httpOnly, SameSite=Lax (Secure em produção) gerenciado pelo BFF**, com o JWT cifrado dentro; o JS nunca vê o token.
 
 ---
 
@@ -84,7 +84,7 @@ Agrupadas por prioridade. Nada aqui está construído ainda; são as direções 
 - **Serviço BFF** — Fastify, no repositório `centavo-bff`; ver §2 arquitetura-alvo.
 - **OpenAPI contract-first** — escrever o `openapi.yaml`, gerar o client TS, apagar as interfaces feitas à mão.
 - **i18n** — `react-i18next`, bundles `pt-BR` + `en`, extrair todas as strings atuais.
-- **Endurecimento de auth** — sessão em cookie httpOnly via BFF; adicionar fluxo de refresh token; abandonar o token no localStorage.
+- **Endurecimento de auth** — ~~sessão em cookie httpOnly via BFF~~ (feito no C16/C17); falta o fluxo de refresh, que depende de um endpoint de refresh no Spring.
 - **Sistema de erro/toast** — substituir o `alert()`; renderizar os *códigos* de erro do backend via i18n.
 
 **Ferramental / DX**

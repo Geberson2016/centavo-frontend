@@ -8,6 +8,11 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
+
+# Valores reais de ambiente ficam fora do git (AGENTS.md §1.5)
+.env
+.env.*
+!.env.example
 dist
 dist-ssr
 *.local

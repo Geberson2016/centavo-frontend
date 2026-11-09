@@ -1,4 +1,4 @@
-// Apelidos dos tipos gerados a partir do openapi.yaml do backend (src/api/schema.ts).
+// Apelidos dos tipos gerados a partir do openapi.yaml do BFF (src/api/schema.ts).
 // O schema.ts é gerado por `npm run api:generate` e nunca editado à mão; aqui só
 // damos nomes curtos aos schemas que a UI usa.
 import type { components } from './schema';
@@ -13,7 +13,7 @@ export type ErrorCode = Schemas['ErrorCode'];
 export type UserRequest = Schemas['UserRequest'];
 export type UserRegisterResponse = Schemas['UserRegisterResponse'];
 export type AuthRequest = Schemas['AuthRequest'];
-export type UserResponse = Schemas['UserResponse'];
+export type SessionUser = Schemas['SessionUser'];
 
 export type AccountRequest = Schemas['AccountRequest'];
 export type AccountResponse = Schemas['AccountResponse'];
@@ -26,7 +26,7 @@ export type TransactionRequest = Schemas['TransactionRequest'];
 export type TransactionResponse = Schemas['TransactionResponse'];
 export type RecentTransactionResponse = Schemas['RecentTransactionResponse'];
 
-export type DashboardSummaryResponse = Schemas['DashboardSummaryResponse'];
+export type DashboardView = Schemas['DashboardView'];
 
 export type Problem = Schemas['Problem'];
 

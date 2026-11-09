@@ -144,6 +144,8 @@
     "INVALID_CREDENTIALS": "Invalid e-mail or password.",
     "VALIDATION_ERROR": "Please check the information provided.",
     "INTERNAL_ERROR": "Internal server error. Please try again later.",
+    "UPSTREAM_UNAVAILABLE": "Service is unavailable right now. Please try again shortly.",
+    "UNAUTHENTICATED": "Your session has expired. Please sign in again.",
     "createAccount": "Could not create the account.",
     "createCategory": "Could not create the category.",
     "createTransaction": "Could not create the transaction.",

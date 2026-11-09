@@ -1,37 +1,22 @@
 import axios from 'axios';
-import { clearAuth } from '../utils/auth';
 
-export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
-});
+// A UI fala só com o BFF, na mesma origem (proxy do Vite em dev). A sessão vai
+// num cookie httpOnly que o browser manda sozinho: nenhum token passa pelo JS.
+export const api = axios.create({ baseURL: '/bff' });
 
-const PUBLIC_ROUTES = ['/users/login', '/users/register'];
-
-api.interceptors.request.use((config) => {
-  const isPublic = PUBLIC_ROUTES.some((route) => config.url?.includes(route));
-
-  if (!isPublic) {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-  }
-
-  return config;
-});
+// Rotas em que 401 é resposta esperada (credencial errada, ainda sem sessão) e
+// não sinal de sessão expirada.
+const AUTH_ROUTES = ['/session', '/users/register'];
 
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    // 401 numa rota autenticada = sessao expirada, entao derruba para o login.
-    // Em /users/login o 401 e a propria credencial invalida: redirecionar ali
-    // recarregaria a pagina e engoliria o aviso antes de o usuario ler.
-    const isPublic = PUBLIC_ROUTES.some((route) =>
-      error.config?.url?.includes(route)
-    );
+    // 401 numa rota autenticada = sessão expirada ou derrubada: o BFF já apagou o
+    // cookie, então volta para o login (hard, para limpar o cache das queries).
+    const url: string = error.config?.url ?? '';
+    const isAuthRoute = AUTH_ROUTES.some((route) => url.startsWith(route));
 
-    if (error.response?.status === 401 && !isPublic) {
-      clearAuth();
+    if (error.response?.status === 401 && !isAuthRoute) {
       window.location.href = '/login';
     }
     return Promise.reject(error);

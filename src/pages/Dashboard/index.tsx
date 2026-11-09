@@ -3,24 +3,17 @@ import { Link } from 'react-router-dom';
 import { SummaryCard } from '../../components/SummaryCard';
 import { AccountCard } from '../../components/AccountCard';
 import { TransactionsTable } from '../../components/TransactionsTable';
-import { useSummary } from '../../hooks/useSummary';
 import { useEffect, useRef, useState } from 'react';
-import { useAccountSummary } from '../../hooks/useAccountSummary';
-import { useRecentTransactions } from '../../hooks/useRecentTransactions';
+import { useDashboard } from '../../hooks/useDashboard';
 import { useTranslation } from 'react-i18next';
 
 export function Dashboard() {
   const { t, i18n } = useTranslation();
-  const {
-    data: summary,
-    isLoading: isSummaryLoading,
-    isError: isSummaryError,
-  } = useSummary();
-  const {
-    data: transactions = [],
-    isLoading: isTransactionsLoading,
-    isError: isTransactionsError,
-  } = useRecentTransactions();
+  // Uma chamada só: o BFF agrega resumo, lançamentos recentes e contas.
+  const { data: dashboard, isLoading, isError } = useDashboard();
+  const summary = dashboard?.summary;
+  const transactions = dashboard?.recentTransactions ?? [];
+  const accounts = dashboard?.accounts;
 
   const formatCurrency = (value: number = 0) => {
     return new Intl.NumberFormat(i18n.language, {
@@ -29,7 +22,6 @@ export function Dashboard() {
     }).format(value);
   };
 
-  const { data: accounts } = useAccountSummary();
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const scroll = (direction: 'left' | 'right') => {
@@ -55,13 +47,13 @@ export function Dashboard() {
     return () => window.removeEventListener('resize', check);
   }, [accounts]);
 
-  // O resumo entra no mesmo guarda das transacoes: sem ele os cards renderizariam
-  // valores vazios como se fossem zero, o que num app de finanças e pior que avisar.
-  if (isTransactionsLoading || isSummaryLoading)
+  // Sem o resumo os cards renderizariam valores vazios como se fossem zero, o que
+  // num app de finanças é pior que avisar.
+  if (isLoading)
     return (
       <div className="p-10 text-slate-500 font-bold">{t('common.loading')}</div>
     );
-  if (isTransactionsError || isSummaryError)
+  if (isError)
     return (
       <div className="p-10 text-red-500 font-bold">
         {t('common.serverError')}
@@ -203,8 +195,8 @@ export function Dashboard() {
       <section>
         <TransactionsTable
           transactions={transactions}
-          isLoading={isTransactionsLoading}
-          isError={isTransactionsError}
+          isLoading={isLoading}
+          isError={isError}
         />
       </section>
     </div>

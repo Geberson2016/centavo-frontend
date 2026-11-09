@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "api:generate": "openapi-typescript ${OPENAPI_SPEC:-../centavo-backend/src/main/resources/openapi.yaml} -o src/api/schema.ts --enum-values --export-type",
+    "api:generate": "openapi-typescript ${OPENAPI_SPEC:-../centavo-bff/openapi.yaml} -o src/api/schema.ts --enum-values --export-type",
     "api:check": "npm run api:generate && git diff --exit-code -- src/api/schema.ts"
   },
   "dependencies": {

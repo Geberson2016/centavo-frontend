@@ -33,16 +33,16 @@ Ainda não há test runner configurado (Vitest + React Testing Library estão no
 
 ## Arquitetura (atual)
 
-- **Camada de dados** — TanStack Query + uma instância axios compartilhada em `src/services/api.ts`. Seus dois interceptors são a única fonte do comportamento de auth: o de request anexa `Authorization: Bearer <token>` do `localStorage` em toda rota exceto as `PUBLIC_ROUTES` (`/users/login`, `/users/register`); o de response, em `401`, chama `clearAuth()` e redireciona (hard) para `/login`.
-- **Tipos da API** — gerados pelo `openapi-typescript` a partir de `../centavo-backend/src/main/resources/openapi.yaml` (outro caminho via env `OPENAPI_SPEC`) em `src/api/schema.ts`, que é versionado e **nunca editado à mão**. A UI importa de `src/api/types.ts`, que dá nomes curtos aos schemas (`AccountResponse`, `TransactionRequest`…) e reexporta os arrays dos enums (`accountTypeValues`, `errorCodeValues`…). Mudou o contrato no backend? Rode `npm run api:generate` e commite o `schema.ts` junto.
-- **Um hook por endpoint** — cada arquivo em `src/hooks/` embrulha um único `useQuery` (leitura) ou `useMutation` (escrita). Mutations invalidam as query keys relacionadas (`useCreateTransaction` → `['dashboard-summary']`). Adicione features como hooks; nunca chame `api` dos componentes.
-- **Auth** — baseada em localStorage, sem context. `useAuth()` lê `user`; `src/utils/auth.ts` tem `isTokenValid()` (decodifica o `exp` do JWT) e `clearAuth()`. O login grava `token`/`user` no `localStorage` em `pages/Login/index.tsx`.
+- **Camada de dados** — TanStack Query + uma instância axios compartilhada em `src/services/api.ts` com `baseURL: '/bff'`. A UI fala **só com o BFF** (`centavo-bff`), na mesma origem: o Vite faz proxy de `/bff` para `BFF_URL` (padrão `http://localhost:3000`, ver `.env.example`). Não há token no JS: a sessão é um cookie httpOnly que o browser manda sozinho. O interceptor de resposta, em `401` fora das rotas de auth (`/session`, `/users/register`), redireciona (hard) para `/login`.
+- **Tipos da API** — gerados pelo `openapi-typescript` a partir do contrato do BFF, `../centavo-bff/openapi.yaml` (outro caminho via env `OPENAPI_SPEC`) em `src/api/schema.ts`, que é versionado e **nunca editado à mão**. A UI importa de `src/api/types.ts`, que dá nomes curtos aos schemas (`AccountResponse`, `TransactionRequest`…) e reexporta os arrays dos enums (`accountTypeValues`, `errorCodeValues`…). Mudou o contrato do BFF? Rode `npm run api:generate` e commite o `schema.ts` junto.
+- **Um hook por endpoint** — cada arquivo em `src/hooks/` embrulha um único `useQuery` (leitura) ou `useMutation` (escrita). Mutations invalidam as query keys relacionadas (`useCreateTransaction` → `['dashboard']`). O Dashboard usa um único `useDashboard()` (`GET /bff/dashboard`, agregado pelo BFF). Adicione features como hooks; nunca chame `api` dos componentes.
+- **Auth** — sessão do BFF em cookie httpOnly (nada no `localStorage`). `useSession()` (`GET /bff/session`) é a fonte de verdade de "está logado"; `useAuth()` devolve o `user` dela. `useLogin()` (`POST /bff/session`) já popula a query da sessão; `useLogout()` (`DELETE /bff/session`) limpa o cache. O `<PrivateRoute>` manda para `/login` só em 401; com o BFF fora do ar, mostra erro em vez de deslogar.
 - **Roteamento** — `src/App.tsx`. `/login` + `/register` públicas; o resto aninhado sob `<PrivateRoute>` → `<AppLayout>` (`Sidebar` + `<Outlet>`).
 - **Providers** — `src/main.tsx` embrulha em `QueryClientProvider` (+ devtools); o `<BrowserRouter>` está no `App.tsx`.
 
-## Arquitetura-alvo (ver AGENTS.md §2)
+## Arquitetura (ver AGENTS.md §2)
 
-O React chama **apenas o BFF**, nunca o Spring direto. O BFF (`centavo-bff`, Fastify) molda view-models, guarda a sessão e move a auth para um **cookie httpOnly** (fora do `localStorage`). As regras de negócio ficam no Spring.
+O React chama **apenas o BFF**, nunca o Spring direto. O BFF (`centavo-bff`, Fastify) molda view-models, guarda a sessão em **cookie httpOnly** e repassa ao Spring. As regras de negócio ficam no Spring. Para rodar local: Spring (`docker compose` em `~/Projects/Centavo`), BFF (`npm run dev` no `centavo-bff`) e este front (`npm run dev`).
 
 ## Convenções
 

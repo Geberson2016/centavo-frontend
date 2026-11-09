@@ -24,16 +24,7 @@ export function Login() {
 
   const onSubmit = (data: LoginFormData) => {
     login(data, {
-      onSuccess: (response) => {
-        localStorage.setItem('token', response.token);
-        localStorage.setItem(
-          'user',
-          JSON.stringify({
-            id: response.id,
-            name: response.name,
-            email: response.email,
-          })
-        );
+      onSuccess: () => {
         navigate('/dashboard');
       },
       onError: (error) => {

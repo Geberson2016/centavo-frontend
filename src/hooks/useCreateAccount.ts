@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '../services/api';
 import type { AccountRequest, AccountResponse } from '../api/types';
+import { DASHBOARD_QUERY_KEY } from './useDashboard';
 
 export function useCreateAccount() {
   const queryClient = useQueryClient();
@@ -12,6 +13,8 @@ export function useCreateAccount() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['accounts'] });
+      // A conta nova aparece nos cards do dashboard.
+      queryClient.invalidateQueries({ queryKey: DASHBOARD_QUERY_KEY });
     },
   });
 }
