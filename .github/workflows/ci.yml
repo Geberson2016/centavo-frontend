@@ -1,0 +1,63 @@
+# Pipeline do frontend. O job "check" valida o próprio repositório; o "contract" baixa o
+# centavo-bff ao lado e falha se o src/api/schema.ts versionado não bate com o openapi.yaml
+# do BFF. Ficam separados para o vermelho dizer qual dos dois quebrou.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Lint, testes e build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+      # tsc -b (typecheck) + vite build
+      - run: npm run build
+
+  contract:
+    name: Tipos em dia com o contrato do BFF
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      # Mesmo layout da máquina local: os repositórios lado a lado.
+      - uses: actions/checkout@v7
+        with:
+          path: centavo-frontend
+
+      - uses: actions/checkout@v7
+        with:
+          repository: ${{ github.repository_owner }}/centavo-bff
+          path: centavo-bff
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: centavo-frontend/package-lock.json
+
+      - run: npm ci
+        working-directory: centavo-frontend
+
+      - name: npm run api:check
+        run: npm run api:check
+        working-directory: centavo-frontend
