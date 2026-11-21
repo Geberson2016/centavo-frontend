@@ -50,7 +50,7 @@ npm test              # Vitest (uma vez); npm run test:watch fica observando
 
 ## Arquitetura (ver AGENTS.md §2)
 
-O React chama **apenas o BFF**, nunca o Spring direto. O BFF (`centavo-bff`, Fastify) molda view-models, guarda a sessão em **cookie httpOnly** e repassa ao Spring. As regras de negócio ficam no Spring. Para rodar local: Spring (`docker compose` em `~/Projects/Centavo`), BFF (`npm run dev` no `centavo-bff`) e este front (`npm run dev`).
+O React chama **apenas o BFF**, nunca o Spring direto. O BFF (`centavo-bff`, Fastify) molda view-models, guarda a sessão em **cookie httpOnly** e repassa ao Spring. As regras de negócio ficam no Spring. Para rodar local: o stack inteiro sobe pelo `docker compose` do repositório irmão `centavo-infra` (UI em `http://localhost:4173`, servida por nginx a partir do `Dockerfile` daqui, com `nginx/default.conf.template` fazendo o proxy de `/bff`). Com hot reload: suba só `postgres backend` no compose, rode o BFF (`npm run dev` no `centavo-bff`) e este front (`npm run dev`, `localhost:5173`).
 
 ## Convenções
 
