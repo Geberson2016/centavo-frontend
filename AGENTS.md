@@ -12,8 +12,13 @@ O Centavo é um app de finanças pessoais: **React (Vite) → BFF (Node/TS) → 
 - **Português** — TODO o resto de texto humano: comentários no código, mensagens de commit, este `AGENTS.md`, o `CLAUDE.md`, `README`, seções de roadmap, descrições/summaries de endpoints no OpenAPI, ADRs e qualquer `plano.md` / documento de planejamento.
 - **Copy do app para o usuário final** — sempre via **i18n** (ver §1.2), nunca hardcoded.
 - Mensagens de commit seguem Conventional Commits: o prefixo é técnico (`feat:`, `fix:`, `chore:`…), o texto após o prefixo é em português.
-- **Documentos de planejamento** (planos, roadmaps de execução) vivem em `Centavo/docs/planos/` — o diretório **pai**, irmão de `centavo-backend/` e `centavo-frontend/` —, em português, com nome descritivo. Ficam fora dos dois repositórios de propósito: são cross-repo (backend + frontend + BFF) e não pertencem a nenhum deles.
-  > ⚠️ O diretório pai **não é um repositório git**, então esses documentos não têm histórico nem cópia no remoto — não existe `git revert` para eles. Versioná-los exigiria criar um repositório próprio para o `docs/`.
+- **Documentos de planejamento** (planos, roadmaps de execução) vivem em `Centavo/docs/planos/`, no repositório `centavo-docs` (irmão deste), em português e com nome descritivo. Ficam fora deste repositório de propósito: são cross-repo (backend + frontend + BFF).
+
+## 0.1 Fluxo de trabalho no GitHub (obrigatório em todo o projeto)
+
+- **Nada entra na `main` sem pull request.** Cada demanda vira uma issue, uma branch `<tipo>/<nº-da-issue>-<slug>` e um PR para a `main`. Quem aprova é o Geberson, fazendo o merge (só por squash). O GitHub recusa push direto na `main` (regra "Proteção da main").
+- O título do PR segue o Conventional Commits, porque vira o título do commit na `main`.
+- O passo a passo completo, inclusive para demandas que tocam vários repositórios, está em `Centavo/docs/processo/fluxo-de-trabalho.md` (repositório `centavo-docs`).
 
 ---
 
@@ -52,6 +57,7 @@ Configuração vem do ambiente (`import.meta.env`, tipado). Forneça um `.env.ex
 - [ ] `npm run lint` e `npm run build` (tsc) passam limpos.
 - [ ] Nova lógica coberta por teste (Vitest + React Testing Library, rede simulada pelo MSW); `npm test` passa.
 - [ ] Mensagem de commit em Conventional Commits, texto em português.
+- [ ] Entrou por branch e PR ligados à issue (§0.1), nunca direto na `main`.
 
 ---
 
