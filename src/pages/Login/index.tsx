@@ -41,17 +41,19 @@ export function Login() {
             <h1 className="text-3xl font-black text-slate-900 tracking-tighter">
               {t('login.title')}
             </h1>
-            <p className="text-slate-500 text-sm mt-2">
-              {t('login.subtitle')}
-            </p>
+            <p className="text-slate-500 text-sm mt-2">{t('login.subtitle')}</p>
           </header>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase mb-1 ml-1">
+              <label
+                htmlFor="login-email"
+                className="block text-xs font-bold text-slate-700 uppercase mb-1 ml-1"
+              >
                 {t('login.email')}
               </label>
               <input
+                id="login-email"
                 type="email"
                 {...register('email', { required: true })}
                 className="w-full p-3 rounded-xl border border-slate-200 focus:outline-indigo-600 bg-slate-50"
@@ -59,11 +61,15 @@ export function Login() {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase mb-1 ml-1">
+              <label
+                htmlFor="login-password"
+                className="block text-xs font-bold text-slate-700 uppercase mb-1 ml-1"
+              >
                 {t('login.password')}
               </label>
               <div className="relative">
                 <input
+                  id="login-password"
                   type={showPassword ? 'text' : 'password'}
                   {...register('password', { required: true })}
                   className="w-full p-3 rounded-xl border border-slate-200 focus:outline-indigo-600 bg-slate-50 pr-10"

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { redirectToLogin } from './navigation';
 
 // A UI fala só com o BFF, na mesma origem (proxy do Vite em dev). A sessão vai
 // num cookie httpOnly que o browser manda sozinho: nenhum token passa pelo JS.
@@ -17,7 +18,7 @@ api.interceptors.response.use(
     const isAuthRoute = AUTH_ROUTES.some((route) => url.startsWith(route));
 
     if (error.response?.status === 401 && !isAuthRoute) {
-      window.location.href = '/login';
+      redirectToLogin();
     }
     return Promise.reject(error);
   }

@@ -50,7 +50,7 @@ Configuração vem do ambiente (`import.meta.env`, tipado). Forneça um `.env.ex
 - [ ] Código em inglês; nenhuma string de usuário hardcoded (chaves de i18n adicionadas em **ambos** os bundles `pt-BR` e `en`).
 - [ ] Tipos gerados a partir do / consistentes com o `openapi.yaml`; sem `any`.
 - [ ] `npm run lint` e `npm run build` (tsc) passam limpos.
-- [ ] Nova lógica coberta por teste (Vitest + React Testing Library — ver roadmap).
+- [ ] Nova lógica coberta por teste (Vitest + React Testing Library, rede simulada pelo MSW); `npm test` passa.
 - [ ] Mensagem de commit em Conventional Commits, texto em português.
 
 ---

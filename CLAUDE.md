@@ -27,9 +27,17 @@ npm run lint     # eslint no repo inteiro
 npm run preview  # serve o build de produção
 npm run api:generate  # regenera src/api/schema.ts a partir do openapi.yaml do backend
 npm run api:check     # regenera e falha se o schema.ts versionado estiver desatualizado
+npm test              # Vitest (uma vez); npm run test:watch fica observando
 ```
 
-Ainda não há test runner configurado (Vitest + React Testing Library estão no roadmap do `AGENTS.md`).
+## Testes
+
+- **Vitest + React Testing Library** em jsdom (`vitest.config.ts`). O teste fica ao lado do código: `Login.test.tsx` na pasta `pages/Login/`, `apiError.test.ts` ao lado do `apiError.ts`.
+- **Rede**: o BFF é simulado pelo **MSW** (`src/test/server.ts`). Cada teste declara as rotas que usa com `server.use(http.get('/bff/...', ...))`. Chamada sem handler **falha** o teste (`onUnhandledFrame: 'error'`), então nada sai para a rede.
+- **Render**: `renderWithProviders(ui, { route })` (`src/test/render.tsx`) monta i18n, TanStack Query (cliente novo por teste, sem retry), toasts e um `MemoryRouter`. Para hooks, `renderHook(..., { wrapper: createWrapper() })`.
+- **Idioma** fixo em `pt-BR` no setup; procure elementos pelo texto traduzido ou pelo papel (`getByRole`, `getByLabelText`).
+- O redirecionamento "hard" para `/login` mora em `services/navigation.ts` para poder ser trocado por `vi.mock` (o jsdom não navega).
+- `i18n/bundles.test.ts` garante que `pt-BR` e `en` têm as mesmas chaves e que todo `ErrorCode` do contrato tem mensagem.
 
 ## Arquitetura (atual)
 
