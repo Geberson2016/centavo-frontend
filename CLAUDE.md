@@ -11,6 +11,7 @@ Este arquivo orienta o Claude Code (claude.ai/code) ao trabalhar neste repositó
 2. **OpenAPI contract-first** — `openapi.yaml` é a fonte da verdade; o client/tipos são gerados, não escritos à mão.
 3. **SOLID** — um hook por endpoint; componentes dependem de hooks, nunca de `axios` direto.
 4. **Sem segredos no código**; **sem `any`**; dinheiro em centavos/string decimal, nunca float.
+5. **Fluxo no GitHub** — nada direto na `main`: issue → branch → PR, e quem faz o merge é o Geberson (ver `AGENTS.md §0.1` e `../docs/processo/fluxo-de-trabalho.md`).
 
 O Definition of Done e a justificativa completa estão no `AGENTS.md`.
 
